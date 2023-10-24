@@ -1,14 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/usuarios/HomeView.vue'
+import ControleUsers from '../views/usuarios/Controle_Users.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/usuarios',
-    name: 'home',
-    component: HomeView
+    component: HomeView,
+    children: [
+      {
+        path: '/usuarios/controleusers',
+        name: 'theControleUsers',
+        component: ControleUsers
+      }
+    ]
   },
   {
     path: '/login',

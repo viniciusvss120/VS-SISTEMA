@@ -31,12 +31,7 @@
             class="rows"
           >
             <td class="borda acao">
-              <!-- <v-icon
-                class="acao-icon"
-                color="#228B22"
-              >
-                mdi-plus
-              </v-icon> -->
+
               <v-btn
                 @click="editar"
               >
@@ -58,7 +53,7 @@
                 </v-icon>
               </v-btn>
             </td>
-            <td class="borda" >{{item.id}}</td>
+            <td class="borda">{{item.id}}</td>
             <td class="borda">{{item.name}}</td>
             <td class="borda">{{item.email}}</td>
             <td class="borda">{{item.cnpj}}</td>
@@ -83,6 +78,13 @@ export default {
       acoes: {
         visualizar: false,
         editar: false
+      },
+      user: {
+        id: null,
+        name: '',
+        email: '',
+        cnpj: '',
+        perfil: ''
       }
     }
   },

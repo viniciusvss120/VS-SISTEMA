@@ -16,5 +16,7 @@ export default {
 </script>
 
 <style>
-
+ /* html, body {
+ overflow: hidden !important;
+} */
 </style>

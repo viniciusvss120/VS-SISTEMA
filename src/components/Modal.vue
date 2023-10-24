@@ -44,6 +44,9 @@ export default {
     },
     acoesModal: {
       type: Object
+    },
+    user: {
+      type: Object
     }
   },
   methods: {
