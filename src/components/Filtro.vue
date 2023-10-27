@@ -32,19 +32,19 @@ export default {
 
 <style scoped>
   .container{
-    max-width: 50%;
+    width: 80%;
     margin: 50px 0px 50px 0px;
     box-shadow: 1px 1px 10px 0px #DCDCDC;
   }
 
   .filtroContainer{
-    padding: 30px;
+    padding: 10px;
   }
 
   .filtro{
     display: flex;
     flex-wrap: wrap;
-    gap: 25px;
+    gap: 20px;
     align-items: flex-start;
   }
 </style>

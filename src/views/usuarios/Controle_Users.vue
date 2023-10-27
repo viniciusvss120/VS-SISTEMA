@@ -7,9 +7,37 @@
     >
       <Modal
         @fecharModal="fecharModal(evento)"
+        @salvar="editUser"
         :acoesModal="acoesModal"
-        :user="user"
-      />
+      >
+        <v-card-text v-show="acoesModal.editar" >
+          <v-text-field
+            label="Nome"
+            v-model="acoesModal.name"
+            clearable
+            :hint="msg"
+          />
+          <v-text-field
+           label="Email"
+           type="email"
+           v-model="acoesModal.email"
+           placeholder="usuario@gmail.com"
+           :hint="msg"
+           clearable
+          />
+          <v-text-field
+            label="CNPJ"
+            v-model="acoesModal.cnpj"
+            clearable
+          />
+          <v-text-field
+            label="Perfil"
+            v-model="acoesModal.perfil"
+            clearable
+          />
+          <!-- <v-text-field label="Senha"></v-text-field> -->
+      </v-card-text>
+      </Modal>
     </div>
     <article class="filtro">
       <Filtro />
@@ -64,7 +92,7 @@ export default {
       items: [],
       showModal: false,
       acoesModal: {},
-      user: {}
+      msg: 'Campo obrigatório'
     }
   },
   created () {
@@ -74,7 +102,7 @@ export default {
     ...mapState('users', ['users'])
   },
   methods: {
-    ...mapActions('users', ['listar']),
+    ...mapActions('users', ['listar', 'editar']),
 
     async listUser () {
       try {
@@ -86,8 +114,14 @@ export default {
       }
     },
 
-    async editUser (user) {
-
+    async editUser () {
+      try {
+        const result = await this.editar(this.acoesModal)
+        console.log(result)
+      } catch (error) {
+        console.error(error)
+      }
+      console.log(this.acoesModal)
     },
     fecharModal () {
       this.showModal = false

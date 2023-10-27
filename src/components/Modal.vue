@@ -8,12 +8,13 @@
           @click="fecharModal"
         >X</span>
       </div>
-      <v-card-text>
-        <v-text-field label="Nome"></v-text-field>
-        <v-text-field label="Email" type="email" placeholder="usuario@gmail.com"></v-text-field>
-        <v-text-field label="CNPJ"></v-text-field>
-        <v-text-field label="Perfil"></v-text-field>
-        <v-text-field label="Senha"></v-text-field>
+      <slot></slot>
+      <v-card-text v-show="acoesModal.visualizar">
+        <v-text-field label="Nome" :value="acoesModal.name" disabled />
+        <v-text-field label="Email" type="email" :value="acoesModal.email" placeholder="usuario@gmail.com"  disabled />
+        <v-text-field label="CNPJ" :value="acoesModal.cnpj" disabled />
+        <v-text-field label="Perfil" :value="acoesModal.perfil"  disabled />
+        <!-- <v-text-field label="Senha"></v-text-field> -->
       </v-card-text>
       <v-card-actions
         v-if="acoesModal.editar"
@@ -21,11 +22,13 @@
         <v-spacer></v-spacer>
         <v-btn
           class="cancelar"
+          @click="fecharModal"
         >
           cancelar
         </v-btn>
         <v-btn
           class="salvar"
+          @click="salvar"
         >
           Salvar
         </v-btn>
@@ -44,18 +47,15 @@ export default {
     },
     acoesModal: {
       type: Object
-    },
-    user: {
-      type: Object
     }
   },
   methods: {
     fecharModal () {
       this.$emit('fecharModal', this.showModal)
+    },
+    salvar () {
+      this.$emit('salvar')
     }
-    // abrirModal () {
-    //   this.showModal = true
-    // }
   }
 
 }

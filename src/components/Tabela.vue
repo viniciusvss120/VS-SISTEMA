@@ -33,7 +33,7 @@
             <td class="borda acao">
 
               <v-btn
-                @click="editar"
+                @click="editar(item.id)"
               >
                 <v-icon
                   class="acao-icon"
@@ -43,7 +43,7 @@
                 </v-icon>
               </v-btn>
               <v-btn
-                @click="vizualizar"
+                @click="vizualizar(item.id)"
               >
                 <v-icon
                   class="acao-icon"
@@ -89,17 +89,36 @@ export default {
     }
   },
   methods: {
-    vizualizar () {
+    vizualizar (id) {
       this.acoes.editar = false
       this.acoes.visualizar = true
-      this.$emit('vizualizar', this.acoes)
+
+      // const usuario = this.dados.filter(item => item.id === 1)
+
+      this.findUser(id)
+      const acoes = {
+        ...this.acoes,
+        ...this.user
+      }
+      this.$emit('vizualizar', acoes)
     },
-    editar () {
+    editar (id) {
       this.acoes.visualizar = false
       this.acoes.editar = true
+      this.findUser(id)
+      const acoes = {
+        ...this.acoes,
+        ...this.user
+      }
+      this.$emit('editar', acoes)
+    },
+    findUser (id) {
+      const user = this.dados.find(index => index.id === id)
 
-      this.$emit('editar', this.acoes)
+      this.user = user
+      // Object.assign(this.user, user)
     }
+
   }
 }
 </script>
