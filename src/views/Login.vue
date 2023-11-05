@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="">
       <Loading
         v-show="loading"
       />

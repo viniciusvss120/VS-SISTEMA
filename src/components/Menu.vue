@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="">
     <nav>
       <div class="navegacao">
         <img src="../views/img/image 1.png" alt="logo">

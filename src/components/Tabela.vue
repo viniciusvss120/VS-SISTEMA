@@ -17,7 +17,7 @@
               E-mail
             </th>
             <th class="borda">
-              CNPJ
+              CPF/CNPJ
             </th>
             <th>
               Perfil
@@ -56,7 +56,7 @@
             <td class="borda">{{item.id}}</td>
             <td class="borda">{{item.name}}</td>
             <td class="borda">{{item.email}}</td>
-            <td class="borda">{{item.cnpj}}</td>
+            <td class="borda">{{item.cpf_cnpj}}</td>
             <td>{{item.perfil}}</td>
           </tr>
         </tbody>
@@ -83,7 +83,7 @@ export default {
         id: null,
         name: '',
         email: '',
-        cnpj: '',
+        cpf_cnpj: '',
         perfil: ''
       }
     }
@@ -125,19 +125,20 @@ export default {
 
 <style scoped>
 .table{
-    max-width: 80%;
+    max-width: 90%;
     margin: 0 auto;
     box-shadow: 0px 0px 10px 1px #DCDCDC;
-    border-radius: 10px;
+    /* border-radius: 10px; */
   }
   .borda{
-    border-right: 1px solid #000;
+    border-right: 1px solid #363636;
   }
 
   .coluna th{
     font-family: Arial, Helvetica, sans-serif;
     color: #000 !important;
     font-size: 1.2rem !important;
+    text-align: center;
   }
 
   .rows{

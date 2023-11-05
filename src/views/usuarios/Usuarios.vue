@@ -1,6 +1,6 @@
 <template>
- <div class="container">
-  <Menu
+ <div class="">
+  <Menu2
     sigla="VSS"
   />
 
@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import Menu from '../../components/Menu'
+import Menu2 from '../../components/Menu2'
 // import { mapActions, mapState } from 'vuex'
 export default {
   name: 'theHome',
   components: {
-    Menu
+    Menu2
   },
   data () {
     return {
@@ -90,7 +90,7 @@ export default {
     display: grid;
     grid-template-columns: 250px 1fr;
     max-height: 700px !important;
-    border: 1px solid;
+    /* border: 1px solid; */
 
   }
   .navigation-drawer{

@@ -2,8 +2,9 @@
    <v-progress-circular
     :size="70"
     :width="7"
-    color="purple"
+    color="black"
     indeterminate
+    class="progress"
   ></v-progress-circular>
 </template>
 <script>
@@ -12,8 +13,9 @@ export default {
 }
 </script>
 <style scoped>
-  .v-progress-circular {
+  .progress {
     margin: 1rem 50%;
+    z-index: 5;
 
   }
 </style>
