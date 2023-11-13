@@ -1,5 +1,5 @@
 <template>
- <div>
+ <div class="main">
   <main>
     <div
       class="modal"
@@ -90,7 +90,10 @@
         </div>
       </v-card-text>
     </Modal2>
-    <article class="filtro">
+    <article
+      class="filtro"
+      v-if="loading === false"
+    >
         <Filtro>
           <div class="filtroContainer">
             <v-form class="filtro-form">
@@ -136,10 +139,22 @@
       v-show="loading"
     />
     <Tabela
+      v-if="loading === false"
       :dados="showUsers"
       @vizualizar="abrirModal"
       @editar="abrirModal"
     />
+    <v-pagination
+      class="paginacao"
+      v-model="page"
+      :length="qtdPaginas"
+      @next="listUser"
+      @previous="listUser"
+      navigation-text-color
+      prev-icon="mdi-menu-left"
+      next-icon="mdi-menu-right"
+    ></v-pagination>
+
   </main>
  </div>
 </template>
@@ -194,15 +209,17 @@ export default {
       showModal: '',
       acoesModal: {},
       msg: 'Campo obrigatório',
+      page: 1,
+      qtdPaginas: 2,
       loading: false
     }
   },
   // beforeCreated () {
   //   this.loading = true
   // },
-  created () {
+  async created () {
     this.loading = true
-    this.listUser()
+    await this.listUser()
     this.loading = false
   },
   computed: {
@@ -221,11 +238,35 @@ export default {
     async listUser () {
       try {
         this.loading = true
-        const list = await this.listar(event)
-        this.items = list
+        const list = await this.listar()
+        this.paginacao(list)
         this.loading = false
       } catch (error) {
         console.error(error)
+      }
+    },
+    paginacao (user) {
+      // const quantidadeExibida = Math.round(user.length / 2)
+      for (let i = 0; i <= user.length; i++) {
+        if (this.page === 1) {
+          if (i <= 8) {
+            const newArray = user.filter((item, index) => index <= i)
+
+            this.items = newArray
+          }
+        } else if (this.page > 1) {
+          if (i >= 9) {
+            const newArray2 = user.filter((item, index) => index >= 9)
+
+            this.items = newArray2
+          }
+        } else if (this.page < this.qtdPaginas) {
+          if (i <= 4) {
+            const newArray = user.filter((item, index) => index <= i)
+
+            this.items = newArray
+          }
+        }
       }
     },
     filtroUser () {
@@ -271,12 +312,12 @@ export default {
 </script>
 
 <style scoped>
+  /* html {
+    overflow: scroll;
+  } */
   /* .container{
     overflow-y: scroll !important;
   } */
-  .container{
-    width: 100%;
-  }
   .filtro{
     display: flex;
     width: 90%;
@@ -292,9 +333,12 @@ export default {
     align-content: center;
     gap: 10px;
   }
-  main{
+  .main{
     overflow-y: scroll;
-    height: 100vh;
+    height: 600px;
+  }
+  .paginacao{
+    margin-top: 20px;
   }
   .modal{
     position: fixed;

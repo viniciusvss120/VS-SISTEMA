@@ -1,5 +1,5 @@
 <template>
- <div class="">
+ <div>
   <Menu2
     sigla="VSS"
   />
@@ -7,7 +7,13 @@
   <section class="navigation">
     <div class="navigation-drawer">
       <ul>
-        <li>Usuários</li>
+        <li class="menus">
+          <router-link
+            to="/usuarios"
+          >
+            Usuários
+          </router-link>
+        </li>
       </ul>
     </div>
    <router-view />
@@ -30,39 +36,14 @@ export default {
       acoesModal: {}
     }
   }
-  // created () {
-  //   this.listUser()
-  // },
-  // computed: {
-  //   ...mapState('users', ['users'])
-  // },
-  // methods: {
-  //   ...mapActions('users', ['listar']),
-
-  //   async listUser () {
-  //     try {
-  //       const list = await this.listar()
-  //       console.log(list)
-  //       this.items = list
-  //     } catch (error) {
-  //       console.error(error)
-  //     }
-  //   },
-  //   fecharModal () {
-  //     this.showModal = false
-  //   },
-  //   abrirModal (evento) {
-  //     this.acoesModal = evento
-  //     console.log(this.acoesModal)
-  //     this.showModal = true
-  //   }
-  // }
 }
 </script>
 
 <style scoped>
+
   li,a{
     text-decoration: none;
+    color: #000;
     padding: 0px;
     margin: 0px;
   }
@@ -89,12 +70,33 @@ export default {
   .navigation{
     display: grid;
     grid-template-columns: 250px 1fr;
-    max-height: 700px !important;
+    max-height: 100vh !important;
     /* border: 1px solid; */
 
   }
   .navigation-drawer{
+    box-shadow: 0px 0px 20px 1px #DCDCDC;
+    /* overflow-y: scroll; */
+    height: 85%;
+  }
+  .navigation-drawer ul {
+    width: 90%;
+  }
+  .menus{
     border: 1px solid;
-    height: 622px;
+    margin-top: 10px;
+    box-shadow: 0px 0px 20px 1px #DCDCDC;
+    padding: 10px;
+  }
+
+  .menus a {
+    padding: 10px 65% 10px 10px;
+    text-align: start;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer
+  }
+  .menus:hover{
+    background: #f6f6f6;
   }
 </style>

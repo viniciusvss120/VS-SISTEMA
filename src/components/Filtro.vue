@@ -12,11 +12,11 @@ export default {
 
 <style scoped>
   .container{
-    margin: 20px auto;
+    margin: 15px auto;
     box-shadow: 1px 1px 10px 0px #DCDCDC;
   }
 
   .filtroContainer{
-    padding: 10px;
+    padding: 5px;
   }
 </style>

@@ -70,6 +70,6 @@ export default {
 <style>
   .menu{
     box-shadow: 0px 0px 10px 1px #DCDCDC;
-    padding: 15px;
+    padding: 5px;
   }
 </style>

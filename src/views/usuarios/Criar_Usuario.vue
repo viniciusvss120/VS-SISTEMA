@@ -7,47 +7,50 @@
         <div class="control">
           <input
             :class="`input ${classInput}`"
-            v-model="user.name"
+            v-model.trim="user.name"
+            name="name"
             type="text"
             placeholder="Nome Completo"
           >
         </div>
         <p
           class="help is-danger"
-          v-show="msg"
+          v-show="msg.name"
         >
           Campo obrigatório
         </p>
       </div>
-        <div class="field">
-          <label class="label">E-mail</label>
-          <div class="control">
-            <input
-              :class="`input`"
-              v-model="user.email"
-              type="email"
-              placeholder="user@gmail.com">
-          </div>
-          <p
-            class="help is-danger"
-            v-show="msg"
-          >
-            Campo obrigatório
-          </p>
+      <div class="field">
+        <label class="label">E-mail</label>
+        <div class="control">
+          <input
+            :class="`input`"
+            v-model.trim="user.email"
+            name="email"
+            type="email"
+            placeholder="user@gmail.com">
+        </div>
+        <p
+          class="help is-danger"
+          v-show="msg.email"
+        >
+          Campo obrigatório
+        </p>
       </div>
         <div class="field">
           <label class="label">Senha</label>
           <div class="control">
             <input
               :class="`input ${classInput}`"
-              v-model="user.password"
+              v-model.trim="user.password"
+              name="password"
               type="password"
               placeholder="Senha com no minímo 8 digitos"
             >
           </div>
           <p
             class="help is-danger"
-            v-show="msg"
+            v-show="msg.password"
           >
             Campo obrigatório
           </p>
@@ -57,14 +60,15 @@
           <div class="control">
             <input
               :class="`input ${classInput}`"
-              v-model="user.cpf_cnpj"
+              v-model.trim="user.cpf_cnpj"
               type="text"
+              name="cpf_cnpj"
               placeholder="00.000.000/0001-00 ou 111.111.111-11"
             >
           </div>
           <p
             class="help is-danger"
-            v-show="msg"
+            v-show="msg.cpf_cnpj"
           >
             Campo obrigatório
           </p>
@@ -74,7 +78,8 @@
         <div class="control">
           <div class="select">
             <select
-              v-model="user.perfil"
+              v-model.trim="user.perfil"
+              name="perfil"
             >
               <option
                 v-for="item in perfil"
@@ -87,7 +92,7 @@
           </div>
           <p
             class="help is-danger"
-            v-show="msg"
+            v-show="msg.perfil"
           >
             Campo obrigatório
           </p>
@@ -106,6 +111,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+
 export default {
   name: 'Criar_Usuario',
   data () {
@@ -118,7 +124,13 @@ export default {
         cpf_cnpj: '',
         perfil: ''
       },
-      msg: false,
+      msg: {
+        name: false,
+        email: false,
+        password: false,
+        cpf_cnpj: false,
+        perfil: false
+      },
       classInput: ''
     }
   },
@@ -184,7 +196,7 @@ export default {
 
       arrayForm.forEach(item => {
         if (item.value === '') {
-          this.msg = true
+          this.msg[item.name] = true
           item.classList.add('is-danger')
         } else {
           const campoComValor = item.value
@@ -196,22 +208,10 @@ export default {
       if (arrayFormValor.length === arrayForm.length) {
         validacao = true
       }
-
+      console.log(this.msg)
       return validacao
     }
   }
-  // watch: {
-  //   user (newValue, oldValue) {
-  //     console.log('Aqui:', newValue)
-  //   // for (const prop in this.user) {
-  //     //   if (this.user[prop]) {
-  //     //     this.classInput = ''
-  //     //     this.msg = false
-  //     //     console.log('estou execultando')
-  //     //   }
-  //     // }
-  //   }
-  // }
 }
 </script>
 

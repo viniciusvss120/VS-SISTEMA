@@ -8,7 +8,7 @@
           <tr class="coluna">
             <th class="borda header-acao">Ações</th>
             <th class="borda">
-              Id
+              ID
             </th>
             <th class="borda">
               Name
