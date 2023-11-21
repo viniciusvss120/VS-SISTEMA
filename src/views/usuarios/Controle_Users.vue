@@ -5,38 +5,6 @@
       class="modal"
       v-show="true"
     >
-      <!-- <Modal
-        @fecharModal="fecharModal(evento)"
-        @salvar="editUser"
-        :acoesModal="acoesModal"
-      >
-        <v-card-text v-show="acoesModal.editar" >
-          <v-text-field
-            label="Nome"
-            v-model="acoesModal.name"
-            clearable
-            :hint="msg"
-          />
-          <v-text-field
-           label="Email"
-           type="email"
-           v-model="acoesModal.email"
-           placeholder="usuario@gmail.com"
-           :hint="msg"
-           clearable
-          />
-          <v-text-field
-            label="CNPJ"
-            v-model="acoesModal.cnpj"
-            clearable
-          />
-          <v-text-field
-            label="Perfil"
-            v-model="acoesModal.perfil"
-            clearable
-          />
-      </v-card-text>
-      </Modal> -->
     </div>
     <Modal2
       :class="showModal"
@@ -94,46 +62,38 @@
       class="filtro"
       v-if="loading === false"
     >
-        <Filtro>
-          <div class="filtroContainer">
-            <v-form class="filtro-form">
-              <div class="select is-medium filtro-exe">
-                <span class="icon-text">
-                  <span class="icon is-medium">
-                    <i class="fas fa-arrow-right"></i>
-                  </span>
+      <Filtro>
+        <div class="filtroContainer">
+          <v-form class="filtro-form">
+            <div class="select is-medium filtro-exe">
+              <span class="icon-text">
+                <span class="icon is-medium">
+                  <i class="fas fa-arrow-right"></i>
                 </span>
-                <select
-                  v-model="filter.name"
+              </span>
+              <select
+                v-model="filter.name"
+              >
+                <option
+                 v-for="item in names"
+                 :key="item"
+                 class="options"
+                 @click="filtroUser"
                 >
-                  <!-- <option></option> -->
-                  <option
-                   v-for="item in names"
-                   :key="item"
-                   class="options"
-                   @click="filtroUser"
-                  >
-                    {{item}}
-                  </option>
-                </select>
-              </div>
-              <!-- <v-text-field
-                label="CPF/CNPJ"
-                type="text"
-                v-model="filter.cnpj"
-                outlined
-                dense
-              /> -->
-              <v-btn
-                elevation="2"
-                large
-                x-large
-                class="is-primary"
-                @click="filtroUser"
-              >Buscar</v-btn>
-            </v-form>
-          </div>
-        </Filtro>
+                  {{item}}
+                </option>
+              </select>
+            </div>
+            <v-btn
+              elevation="2"
+              large
+              x-large
+              class="is-primary"
+              @click="filtroUser"
+            >Buscar</v-btn>
+          </v-form>
+        </div>
+      </Filtro>
     </article>
     <Loading
       v-show="loading"
@@ -146,6 +106,7 @@
     />
     <v-pagination
       class="paginacao"
+      v-if="loading === false"
       v-model="page"
       :length="qtdPaginas"
       @next="listUser"
@@ -201,6 +162,7 @@ export default {
         }
       ],
       items: [],
+      itensTotal: [],
       filter: {
         name: '',
         cnpj: ''
@@ -228,7 +190,7 @@ export default {
       return this.selectUser.length === 0 ? this.items : this.selectUser
     },
     names () {
-      const name = this.items.map(item => item.name)
+      const name = this.itensTotal.map(item => item.name)
       return name
     }
   },
@@ -240,6 +202,7 @@ export default {
         this.loading = true
         const list = await this.listar()
         this.paginacao(list)
+        this.itensTotal = list
         this.loading = false
       } catch (error) {
         console.error(error)
@@ -335,6 +298,7 @@ export default {
   }
   .main{
     overflow-y: scroll;
+    overflow-x: hidden;
     height: 600px;
   }
   .paginacao{

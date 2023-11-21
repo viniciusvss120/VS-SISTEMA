@@ -51,9 +51,9 @@
             <a class="button is-light" href="/usuarios/criar">
               <strong>Criar usuário</strong>
             </a>
-            <a class="button is-primary" href="/login">
-              Login
-            </a>
+            <button class="button is-primary">
+              {{sigla}}
+            </button>
           </div>
         </div>
       </div>
@@ -63,7 +63,12 @@
 
 <script>
 export default {
-  name: 'theMenu2'
+  name: 'theMenu2',
+  props: {
+    sigla: {
+      type: String
+    }
+  }
 }
 </script>
 

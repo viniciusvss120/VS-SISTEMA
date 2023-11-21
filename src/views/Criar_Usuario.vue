@@ -1,6 +1,12 @@
 <template>
   <div class="">
     <div class="criarUser">
+      <a
+        class="button is-primary voltar"
+        href="/login"
+      >
+        Login
+      </a>
       <h1 class="title">Criar usuário</h1>
       <div class="field">
         <label class="label">Nome</label>
@@ -99,7 +105,7 @@
         </div>
       </div>
       <button
-        class="button is-success is-normal mt-6"
+        class="button is-success is-normal mt-6 btn"
         @click="criarUser"
       >
         Enviar
@@ -218,7 +224,15 @@ export default {
 <style>
 .criarUser{
   display: grid;
-  max-width: 60%;
-  margin: 50px auto auto 50px;
+  max-width: 50%;
+  margin: 30px auto;
+}
+.btn{
+  width: 140px;
+  justify-self: end;
+}
+.voltar {
+  width: 120px;
+  margin-bottom: 30px;
 }
 </style>

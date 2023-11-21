@@ -22,8 +22,10 @@
         </p>
         </div>
       </div>
-      <div class="login">
-        <v-form class="login-itens">
+      <div class="login"  @keyup.enter="login">
+        <v-form
+          class="login-itens"
+        >
           <div class="imagem">
             <img src="./img/image 1.png" alt="logo" />
           </div>
@@ -40,7 +42,17 @@
             outlined
             dense
           ></v-text-field>
-          <v-btn @click="login" class="button" color="#000"> Entrar </v-btn>
+          <v-btn
+            @click="login"
+            class="button"
+            color="#000"
+          >
+            Entrar
+          </v-btn>
+          <div class="criar-recuperar">
+            <a href="/criarusuario">Criar uma conta</a> |
+            <a href="/recuperarsenha">Esqueci minha senha</a>
+          </div>
         </v-form>
       </div>
     </div>
@@ -73,13 +85,14 @@ export default {
       }
       axios.post('http://localhost:3002/login', userLogin)
         .then(response => {
-          console.log(response)
-          window.history.pushState({}, null, '/usuarios')
+          window.localStorage.setItem('nameUser', response.data.nameUser)
+          window.history.pushState({}, null, '/')
           window.location.reload()
+          console.log(response.data)
         })
         .catch(error => {
           window.alert(error.response.data)
-          console.error(' Deu ruim', error)
+          console.error('Deu ruim', error)
         })
       this.loading = false
     }
@@ -99,7 +112,7 @@ img {
   max-width: 85%;
   /* border: 1px solid; */
   justify-self: center;
-  margin: 70px auto;
+  margin: 40px auto;
 }
 .bloco {
   font-family: Arial, Helvetica, sans-serif;
@@ -148,5 +161,17 @@ img {
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
+}
+
+.criar-recuperar {
+  margin: 10px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.criar-recuperar a {
+  font-family: 'Roboto', Times, serif;
 }
 </style>

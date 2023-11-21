@@ -1,7 +1,7 @@
 <template>
  <div>
   <Menu2
-    sigla="VSS"
+    :sigla="sigla"
   />
 
   <section class="navigation">
@@ -23,7 +23,7 @@
 
 <script>
 import Menu2 from '../../components/Menu2'
-// import { mapActions, mapState } from 'vuex'
+// import { mapState } from 'vuex'
 export default {
   name: 'theHome',
   components: {
@@ -34,6 +34,14 @@ export default {
       items: [],
       showModal: false,
       acoesModal: {}
+    }
+  },
+  computed: {
+
+    sigla () {
+      const userName = window.localStorage.getItem('nameUser')
+      const siglaUser = userName.slice(0, 2).toLocaleUpperCase()
+      return siglaUser
     }
   }
 }
@@ -47,11 +55,11 @@ export default {
     padding: 0px;
     margin: 0px;
   }
-  .filtro{
+  /* .filtro{
     display: flex;
     justify-content: space-around;
     align-items: center;
-  }
+  } */
 
   /* main{
  }    position: relative;
@@ -76,21 +84,24 @@ export default {
   }
   .navigation-drawer{
     box-shadow: 0px 0px 20px 1px #DCDCDC;
-    /* overflow-y: scroll; */
-    height: 85%;
+    height: 600px;
   }
   .navigation-drawer ul {
     width: 90%;
   }
   .menus{
-    border: 1px solid;
-    margin-top: 10px;
+    border-left: 3px solid;
+    margin: 15px auto 10px 5px;
     box-shadow: 0px 0px 20px 1px #DCDCDC;
     padding: 10px;
   }
+  .menus:hover{
+    padding: 12px;
+    /* transition: ; */
+  }
 
   .menus a {
-    padding: 10px 65% 10px 10px;
+    padding: 10px 60% 10px 10px;
     text-align: start;
     font-size: 1.2rem;
     font-weight: 600;
