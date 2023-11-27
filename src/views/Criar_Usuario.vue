@@ -3,9 +3,9 @@
     <div class="criarUser">
       <a
         class="button is-primary voltar"
-        href="/login"
+        href="/usuarios"
       >
-        Login
+        Voltar
       </a>
       <h1 class="title">Criar usuário</h1>
       <div class="field">

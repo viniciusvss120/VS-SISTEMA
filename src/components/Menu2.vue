@@ -48,7 +48,7 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <a class="button is-light" href="/usuarios/criar">
+            <a class="button is-light" href="/criarusuario">
               <strong>Criar usuário</strong>
             </a>
             <button class="button is-primary">

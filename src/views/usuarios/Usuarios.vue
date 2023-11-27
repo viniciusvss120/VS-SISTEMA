@@ -40,7 +40,8 @@ export default {
 
     sigla () {
       const userName = window.localStorage.getItem('nameUser')
-      const siglaUser = userName.slice(0, 2).toLocaleUpperCase()
+      const siglaUser = userName
+      // .slice(0, 2).toLocaleUpperCase()
       return siglaUser
     }
   }

@@ -50,8 +50,11 @@
             Entrar
           </v-btn>
           <div class="criar-recuperar">
-            <a href="/criarusuario">Criar uma conta</a> |
-            <a href="/recuperarsenha">Esqueci minha senha</a>
+            <!-- <a href="/criarusuario">Criar uma conta</a> | -->
+            <p>
+              Esqueci minha senha?
+              <a href="/recuperarsenha">Crie uma nova</a>
+            </p>
           </div>
         </v-form>
       </div>
