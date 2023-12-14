@@ -45,7 +45,6 @@
           <v-btn
             @click="login"
             class="button"
-            color="#000"
           >
             Entrar
           </v-btn>
@@ -89,9 +88,9 @@ export default {
       axios.post('http://localhost:3002/login', userLogin)
         .then(response => {
           window.localStorage.setItem('nameUser', response.data.nameUser)
-          window.history.pushState({}, null, '/')
-          window.location.reload()
-          console.log(response.data)
+          window.localStorage.setItem('logado', response.data.logado)
+          this.$router.push('/homeuser')
+          // window.history.pushState({}, null, '/')
         })
         .catch(error => {
           window.alert(error.response.data)

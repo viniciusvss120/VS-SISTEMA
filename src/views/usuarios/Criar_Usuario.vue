@@ -1,12 +1,12 @@
 <template>
-  <div class="">
+  <div class="main">
     <div class="criarUser">
-      <a
+      <!-- <a
         class="button is-primary voltar"
         href="/usuarios"
       >
         Voltar
-      </a>
+      </a> -->
       <h1 class="title">Criar usuário</h1>
       <div class="field">
         <label class="label">Nome</label>
@@ -67,6 +67,7 @@
             <input
               :class="`input ${classInput}`"
               v-model.trim="user.cpf_cnpj"
+              @blur="formataCPJCNPJ"
               type="text"
               name="cpf_cnpj"
               placeholder="00.000.000/0001-00 ou 111.111.111-11"
@@ -214,17 +215,43 @@ export default {
       if (arrayFormValor.length === arrayForm.length) {
         validacao = true
       }
-      console.log(this.msg)
       return validacao
+    },
+    formataCPJCNPJ () {
+      /* eslint operator-linebreak: ["error", "after"] */
+
+      const cnpjRegex = /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/
+      const cpfRegex = /(\d{3})(\d{3})(\d{3})(\d{2})/
+
+      this.user.cpf_cnpj = this.user.cpf_cnpj.length === 14 ?
+        this.user.cpf_cnpj.replace(cnpjRegex, function (regex, arg1, arg2, arg3, arg4, arg5) {
+          return arg1 + '.' + arg2 + '.' + arg3 + '/' + arg4 + '-' + arg5
+        }) :
+        this.user.cpf_cnpj.replace(cpfRegex, function (regex, arg1, arg2, arg3, arg4) {
+          return arg1 + '.' + arg2 + '.' + arg3 + '-' + arg4
+        })
+      console.log(this.user.cpf_cnpj)
+      //     return argumento1 + '.' + argumento2 + '.' + argumento3 + '-' + argumento4
+      // if (this.user.cpf_cnpj.length === 13) {
+      // } else {
+      //   this.user.cpf_cnpj = this.user.cpf_cnpj.replace(cpfRegex, function (regex, argumento1, argumento2, argumento3, argumento4) {
+      //     return argumento1 + '.' + argumento2 + '.' + argumento3 + '-' + argumento4
+      //   })
+      // }
     }
   }
 }
 </script>
 
 <style>
+  .main{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 600px;
+  }
 .criarUser{
   display: grid;
-  max-width: 50%;
+  max-width: 60%;
   margin: 30px auto;
 }
 .btn{

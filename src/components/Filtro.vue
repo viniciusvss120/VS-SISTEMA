@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <v-app class="container">
     <slot></slot>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -12,11 +12,12 @@ export default {
 
 <style scoped>
   .container{
-    margin: 15px auto;
-    box-shadow: 1px 1px 10px 0px #DCDCDC;
+    /* margin: 15px auto; */
+    height: 100px;
+    box-shadow: 1px 1px 6px 0px #DCDCDC;
   }
 
-  .filtroContainer{
+  /* .filtroContainer{
     padding: 5px;
-  }
+  } */
 </style>

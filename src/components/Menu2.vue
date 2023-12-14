@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar menu" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="/">
+      <a class="navbar-item" href="/homeuser">
         <img src="../views/img/image 1.png" alt="logo" width="80">
       </a>
 
@@ -48,10 +48,13 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <a class="button is-light" href="/criarusuario">
+            <!-- <a class="button is-light" href="/criarusuario">
               <strong>Criar usuário</strong>
-            </a>
-            <button class="button is-primary">
+            </a> -->
+            <button
+              class="button is-primary"
+              @click="logout"
+            >
               {{sigla}}
             </button>
           </div>
@@ -68,11 +71,20 @@ export default {
     sigla: {
       type: String
     }
+  },
+  methods: {
+    logout () {
+      window.localStorage.clear()
+      this.$router.push('/')
+    }
   }
 }
 </script>
 
 <style>
+  a{
+   color: #000;
+  }
   .menu{
     box-shadow: 0px 0px 10px 1px #DCDCDC;
     padding: 5px;

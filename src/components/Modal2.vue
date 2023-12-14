@@ -2,7 +2,7 @@
   <div class="modal">
   <div class="modal-background" @click="fecharModal"></div>
   <div class="modal-content">
-    <form class="box card">
+    <form class="box card" @submit="form">
       <div class="content is-normal header">
         <h1>Cadastrar</h1>
         <!-- <span
@@ -56,6 +56,16 @@
           Salvar
         </button>
       </v-card-actions>
+      <v-card-actions
+        v-if="acoesModal.deletar"
+      >
+        <button
+          class="button is-normal is-danger ml-2"
+          @click="excluir"
+        >
+          Excluir
+        </button>
+      </v-card-actions>
     </form>
   </div>
   <button class="modal-close is-large" aria-label="close" @click="fecharModal"></button>
@@ -78,8 +88,14 @@ export default {
     fecharModal () {
       this.$emit('fecharModal', this.showModal)
     },
+    form (e) {
+      e.preventDefault()
+    },
     salvar () {
       this.$emit('salvar')
+    },
+    excluir () {
+      this.$emit('excluir')
     }
   }
 }

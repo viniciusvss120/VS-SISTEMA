@@ -6,7 +6,6 @@
       <template v-slot:default>
         <thead>
           <tr class="coluna">
-            <th class="borda header-acao">Ações</th>
             <th class="borda">
               ID
             </th>
@@ -19,9 +18,10 @@
             <th class="borda">
               CPF/CNPJ
             </th>
-            <th>
+            <th class="borda">
               Perfil
             </th>
+            <th class="borda header-acao">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -30,34 +30,36 @@
             :key="item.id"
             class="rows"
           >
-            <td class="borda acao">
 
-              <v-btn
-                @click="editar(item.id)"
-              >
-                <v-icon
-                  class="acao-icon"
-                  color="#228B22"
-                >
-                  mdi-pencil
-                </v-icon>
-              </v-btn>
-              <v-btn
-                @click="vizualizar(item.id)"
-              >
-                <v-icon
-                  class="acao-icon"
-                  color="#228B22"
-                >
-                  mdi-account
-                </v-icon>
-              </v-btn>
-            </td>
             <td class="borda">{{item.id}}</td>
             <td class="borda">{{item.name}}</td>
             <td class="borda">{{item.email}}</td>
             <td class="borda">{{item.cpf_cnpj}}</td>
-            <td>{{item.perfil}}</td>
+            <td class="borda">{{item.perfil}}</td>
+            <td class="borda acao">
+              <v-icon
+                class="acao-icon icon"
+                @click="editar(item.id)"
+                color="#228B22"
+              >
+                mdi-pencil
+              </v-icon>
+
+              <v-icon
+                class="acao-icon icon"
+                @click="vizualizar(item.id)"
+                color="#228B22"
+              >
+                mdi-account
+              </v-icon>
+              <v-icon
+                class="acao-icon icon"
+                @click="deletar(item.id)"
+                color="#228B22"
+              >
+                mdi-delete
+              </v-icon>
+            </td>
           </tr>
         </tbody>
       </template>
@@ -77,7 +79,8 @@ export default {
     return {
       acoes: {
         visualizar: false,
-        editar: false
+        editar: false,
+        deletar: false
       },
       user: {
         id: null,
@@ -91,6 +94,7 @@ export default {
   methods: {
     vizualizar (id) {
       this.acoes.editar = false
+      this.acoes.deletar = false
       this.acoes.visualizar = true
 
       // const usuario = this.dados.filter(item => item.id === 1)
@@ -104,6 +108,7 @@ export default {
     },
     editar (id) {
       this.acoes.visualizar = false
+      this.acoes.deletar = false
       this.acoes.editar = true
       this.findUser(id)
       const acoes = {
@@ -111,6 +116,18 @@ export default {
         ...this.user
       }
       this.$emit('editar', acoes)
+    },
+    deletar (id) {
+      this.acoes.visualizar = false
+      this.acoes.editar = false
+      this.acoes.deletar = true
+
+      this.findUser(id)
+      const acoes = {
+        ...this.acoes,
+        ...this.user
+      }
+      this.$emit('deletar', acoes)
     },
     findUser (id) {
       const user = this.dados.find(index => index.id === id)
@@ -124,6 +141,7 @@ export default {
 </script>
 
 <style scoped>
+
 .table{
     max-width: 90%;
     margin: 0 auto;
@@ -149,10 +167,17 @@ export default {
 
   .acao{
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     max-width: 200px;
-    gap: 20px;
+    /* gap: 20px; */
+  }
+
+  .icon {
+    padding: 15px 20px 15px 20px;
+  }
+  .icon:hover {
+    background: #363636;
   }
 
   .header-acao{

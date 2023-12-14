@@ -10,9 +10,10 @@
       :class="showModal"
       @fecharModal="fecharModal"
       @salvar="editUser"
+      @excluir="deleteUser"
       :acoesModal="acoesModal"
     >
-      <v-card-text v-show="acoesModal.editar" >
+      <v-card-text v-show="acoesModal.editar | acoesModal.deletar" >
           <div class="field">
             <label class="label">Name</label>
             <div class="control">
@@ -58,55 +59,92 @@
         </div>
       </v-card-text>
     </Modal2>
-    <article
+
+    <Filtro
       class="filtro"
       v-if="loading === false"
     >
-      <Filtro>
-        <div class="filtroContainer">
-          <v-form class="filtro-form">
-            <div class="select is-medium filtro-exe">
-              <span class="icon-text">
-                <span class="icon is-medium">
-                  <i class="fas fa-arrow-right"></i>
-                </span>
-              </span>
-              <select
-                v-model="filter.name"
-              >
-                <option
-                 v-for="item in names"
-                 :key="item"
-                 class="options"
-                 @click="filtroUser"
-                >
-                  {{item}}
-                </option>
-              </select>
-            </div>
-            <v-btn
-              elevation="2"
-              large
-              x-large
-              class="is-primary"
+      <v-form
+        @submit.prevent="onSubmit"
+      >
+        <div class="form-item">
+          <v-autocomplete
+            v-model="filter.name"
+            :items="names"
+            class="name"
+            hide-details
+            background-color="#fff"
+            clearable
+            dense
+            filled
+            label="Nomes"
+          ></v-autocomplete>
+          <v-autocomplete
+            v-model="filter.perfil"
+            :items="listPerfis"
+            class="name"
+            hide-details
+            background-color="#fff"
+            clearable
+            dense
+            filled
+            label="Perfil"
+          />
+          <v-text-field
+            label="CPF/CNPJ"
+            v-model.trim="filter.cpf_cnpj"
+            @blur="formataCPJCNPJ"
+            placeholder="00.000.000/0001-00"
+            class="name"
+            clearable
+            hide-details
+            background-color="#fff"
+            dense
+            filled
+          />
+          <div class="pesquisa">
+          <v-divider
+            vertical
+          ></v-divider>
+           <v-btn
+              elevation="1"
+              class="filterBtn"
               @click="filtroUser"
-            >Buscar</v-btn>
-          </v-form>
+            >
+              Buscar
+            </v-btn>
+            <v-icon
+              @click="atualizarTabela"
+              color="#228B22"
+            >
+              mdi-autorenew
+            </v-icon>
+          </div>
         </div>
-      </Filtro>
-    </article>
+      </v-form>
+    </Filtro>
     <Loading
       v-show="loading"
     />
+    <div
+      class="msgNaoEncontrado"
+      v-show="msgNaoEncontrado"
+    >
+      <p>Usuarios não encontrados :(</p>
+    </div>
+
     <Tabela
       v-if="loading === false"
+      v-show="msgNaoEncontrado === false"
       :dados="showUsers"
       @vizualizar="abrirModal"
       @editar="abrirModal"
+      @deletar="abrirModal"
     />
     <v-pagination
       class="paginacao"
       v-if="loading === false"
+      v-show="itensTotal.length >= 9"
       v-model="page"
       :length="qtdPaginas"
       @next="listUser"
@@ -163,22 +201,23 @@ export default {
       ],
       items: [],
       itensTotal: [],
+      perfis: [],
+      ex: ['ds', 'sd'],
       filter: {
         name: '',
-        cnpj: ''
+        cpf_cnpj: '',
+        perfil: ''
       },
       selectUser: [],
       showModal: '',
       acoesModal: {},
       msg: 'Campo obrigatório',
+      msgNaoEncontrado: false,
       page: 1,
       qtdPaginas: 2,
       loading: false
     }
   },
-  // beforeCreated () {
-  //   this.loading = true
-  // },
   async created () {
     this.loading = true
     await this.listUser()
@@ -192,10 +231,21 @@ export default {
     names () {
       const name = this.itensTotal.map(item => item.name)
       return name
+    },
+    listPerfis () {
+      for (let i = 0; i <= this.perfis.length; i++) {
+        for (let j = i + 1; j <= this.perfis.length; j++) {
+          if (this.perfis[i] === this.perfis[j]) {
+            // eslint-disable-next-line
+            this.perfis.splice(j--,1)
+          }
+        }
+      }
+      return this.perfis
     }
   },
   methods: {
-    ...mapActions('users', ['listar', 'editar']),
+    ...mapActions('users', ['listar', 'editar', 'filtro', 'deletar']),
 
     async listUser () {
       try {
@@ -203,10 +253,56 @@ export default {
         const list = await this.listar()
         this.paginacao(list)
         this.itensTotal = list
+        this.perfis = list.map(item => item.perfil)
         this.loading = false
       } catch (error) {
         console.error(error)
       }
+    },
+    async filtroUser () {
+      try {
+        this.loading = true
+
+        const result = await this.filtro(this.filter)
+        if (result.length === 0) {
+          this.msgNaoEncontrado = true
+          this.loading = false
+        }
+        this.items = result
+        this.loading = false
+      } catch (error) {
+        console.error('Deu ruim', error)
+      }
+    },
+    async editUser () {
+      try {
+        this.loading = true
+        console.log(this.acoesModal)
+        const result = await this.editar(this.acoesModal)
+        if (result) {
+          this.fecharModal()
+          this.loading = false
+          window.location.reload()
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async deleteUser () {
+      try {
+        const result = await this.deletar({ id: this.acoesModal.id })
+
+        console.log = result
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    fecharModal () {
+      this.showModal = ''
+    },
+    abrirModal (event) {
+      this.showModal = 'is-active'
+      this.acoesModal = event
     },
     paginacao (user) {
       // const quantidadeExibida = Math.round(user.length / 2)
@@ -232,69 +328,53 @@ export default {
         }
       }
     },
-    filtroUser () {
-      const buscar = this.items.filter(item => item.name === this.filter.name)
-      if (buscar.length !== 0) {
-        this.selectUser = buscar
-      } else {
-        window.alert('Usuário não encontrado!')
-        this.selectUser = []
-      }
+    formataCPJCNPJ () {
+      /* eslint operator-linebreak: ["error", "after"] */
+
+      const cnpjRegex = /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/
+      const cpfRegex = /(\d{3})(\d{3})(\d{3})(\d{2})/
+
+      this.filter.cpf_cnpj = this.filter.cpf_cnpj.length === 14 ?
+        this.filter.cpf_cnpj.replace(cnpjRegex, function (regex, arg1, arg2, arg3, arg4, arg5) {
+          return arg1 + '.' + arg2 + '.' + arg3 + '/' + arg4 + '-' + arg5
+        }) :
+        this.filter.cpf_cnpj.replace(cpfRegex, function (regex, arg1, arg2, arg3, arg4) {
+          return arg1 + '.' + arg2 + '.' + arg3 + '-' + arg4
+        })
     },
-    // clearUser (user) {
-    //   const usuario = user.split(' ')
-    //   const userLimpo = usuario.filter(item => item !== '-').toString().replaceAll(',', '')
-    //   const cnpjcpf = userLimpo.slice(userLimpo.length - 18)
-    //   const nome = userLimpo.slice(0, userLimpo.length - 18)
-    //   return { cnpjcpf, nome }
-    // },
-    async editUser () {
-      try {
-        this.loading = true
-        console.log(this.acoesModal)
-        const result = await this.editar(this.acoesModal)
-        if (result) {
-          this.fecharModal()
-          this.loading = false
-          window.location.reload()
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    fecharModal () {
-      this.showModal = ''
-    },
-    abrirModal (event) {
-      console.log(event)
-      this.showModal = 'is-active'
-      this.acoesModal = event
+    atualizarTabela () {
+      return window.location.reload()
     }
   }
 }
 </script>
 
 <style scoped>
-  /* html {
-    overflow: scroll;
-  } */
-  /* .container{
-    overflow-y: scroll !important;
-  } */
   .filtro{
     display: flex;
     width: 90%;
-    margin: 0 auto;
+  }
+  .form-item {
+    display: flex;
     align-items: center;
+    gap: 15px;
+    margin: 10px auto;
   }
-  .filtro-form{
+  /* .filtro-exe{
     display: flex;
-    justify-content: space-between;
-  }
-  .filtro-exe{
-    display: flex;
-    align-content: center;
+    align-items: center;
     gap: 10px;
+    font-size: 1.2rem;
+  } */
+
+  .pesquisa {
+    display: flex;
+    justify-content: space-around;
+    width: 15%;
+  }
+
+  .name {
+    border: 1px solid;
   }
   .main{
     overflow-y: scroll;
@@ -308,8 +388,13 @@ export default {
     position: fixed;
     width: 100%;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.05);
     z-index: 11;
     border: 1px solid;
+  }
+
+  .msgNaoEncontrado{
+    text-align: center;
+    font-size: 3rem;
   }
 </style>

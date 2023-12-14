@@ -38,6 +38,16 @@ export default {
     }
   },
 
+  async filtro ({ commit }, data) {
+    try {
+      const result = await axios.post('http://localhost:3002/filter', data)
+
+      return result.data
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
   // Recuperar Senha
 
   async envioCpfCnpj ({ commit }, data) {
