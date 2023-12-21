@@ -89,7 +89,7 @@ export default {
         .then(response => {
           window.localStorage.setItem('nameUser', response.data.nameUser)
           window.localStorage.setItem('logado', response.data.logado)
-          this.$router.push('/homeuser')
+          this.$router.push('/')
           // window.history.pushState({}, null, '/')
         })
         .catch(error => {
@@ -112,6 +112,7 @@ img {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   max-width: 85%;
+  overflow: hidden;
   /* border: 1px solid; */
   justify-self: center;
   margin: 40px auto;

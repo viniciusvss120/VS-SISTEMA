@@ -5,10 +5,6 @@
     <form class="box card" @submit="form">
       <div class="content is-normal header">
         <h1>Cadastrar</h1>
-        <!-- <span
-          class="btnModal"
-          @click="fecharModal"
-        >X</span> -->
       </div>
       <slot></slot>
       <v-card-text v-show="acoesModal.visualizar">

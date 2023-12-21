@@ -1,15 +1,153 @@
 <template>
   <div>
-    <h1>Menu</h1>
+    <div class="navigation-drawer">
+      <div class="navi-main">
+        <div class="menuContainer usuarios">
+          <div class="menuLabel"
+            @click="() => showUsuarios = !showUsuarios"
+          >
+            <v-icon>
+              mdi-pencil-box-outline
+            </v-icon>
+            <span
+            >
+              Cadastros
+            </span>
+            <v-icon>
+              mdi-menu-down
+            </v-icon>
+          </div>
+          <ul v-show="showUsuarios">
+            <li
+              class="menus"
+            >
+              <v-icon>
+                mdi-account-multiple
+              </v-icon>
+              <router-link
+                to="/cadastro/usuarios"
+              >
+                Consultar usuários
+              </router-link>
+            </li>
+            <li
+              class="menus"
+            >
+              <v-icon>
+                mdi-account-edit
+              </v-icon>
+              <router-link
+                to="/cadastro/criarusuario"
+              >
+                Cadastrar usuários
+              </router-link>
+            </li>
+            <li
+              class="menus"
+            >
+              <v-icon>
+                mdi-food
+              </v-icon>
+              <router-link
+                to="/cadastro/produtos"
+              >
+                Cadastrar produtos
+              </router-link>
+            </li>
+          </ul>
+        </div>
+        <div class="menuContainer chamados"
+        >
+          <div class="menuLabel"
+            @click="() => showChamados = !showChamados"
+          >
+            <v-icon>
+              mdi-cart-variant
+            </v-icon>
+            <span
+            >
+              Vendas
+            </span>
+            <v-icon>
+              mdi-menu-down
+            </v-icon>
+          </div>
+          <ul v-show="showChamados">
+            <li
+              class="menus"
+            >
+              <v-icon>
+                mdi-cart
+              </v-icon>
+              <router-link
+                to="/chamados"
+              >
+                Venda direta
+              </router-link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
 export default {
-  name: 'theMenuVertical'
+  name: 'theMenuVertical',
+  data () {
+    return {
+      showModal: false,
+      showUsuarios: false,
+      showChamados: false,
+      acoesModal: {}
+    }
+  }
 }
 </script>
 
 <style scoped>
+  .navigation-drawer{
+    box-shadow: 0px 0px 20px 1px #DCDCDC;
+    height: 600px;
+    position: relative;
+  }
 
+  .menuContainer {
+    margin: 0px auto 25px 15px;
+    cursor: pointer;
+  }
+  .menuLabel {
+    display: flex;
+    gap: 8px;
+  }
+  .navi-main{
+    position: fixed;
+    width: 16%;
+    top: 80px;
+  }
+
+  .menuLabel span {
+    /* margin-top: 20px; */
+    font-size: 1.2rem;
+    color: #000;
+  }
+
+  .menus{
+    margin: 5px 0px 5px 30px;
+    padding: 5px;
+  }
+
+  .menus a {
+    /* padding: 10px 60% 10px 0px; */
+    text-align: start;
+    font-size: 1rem;
+    color: #000000DE;
+    font-weight: 400;
+    cursor: pointer
+  }
+  .menus:hover{
+    background: #f6f6f6;
+  }
 </style>

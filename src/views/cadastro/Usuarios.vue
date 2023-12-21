@@ -5,7 +5,8 @@
   />
 
   <section class="navigation">
-    <div class="navigation-drawer">
+    <MenuVertical />
+    <!-- <div class="navigation-drawer">
       <div
         class="menuContainer usuarios"
       >
@@ -19,9 +20,6 @@
           >
             Usuarios
           </span>
-          <!-- <v-icon>
-            mdi-menu-down
-          </v-icon> -->
         </div>
         <ul v-show="showUsuarios">
           <li
@@ -63,9 +61,6 @@
           >
             Chamados
           </span>
-          <!-- <v-icon>
-            mdi-menu-down
-          </v-icon> -->
         </div>
         <ul v-show="showChamados">
           <li
@@ -79,33 +74,24 @@
           </li>
         </ul>
       </div>
-    </div>
+    </div> -->
    <router-view />
   </section>
  </div>
 </template>
 
 <script>
+import MenuVertical from '@/components/MenuVertical.vue'
 import Menu2 from '../../components/Menu2'
 // import { mapState } from 'vuex'
 export default {
   name: 'theHome',
   components: {
-    Menu2
+    Menu2,
+    MenuVertical
   },
   data () {
     return {
-      items: [
-        {
-          id: 1,
-          name: 'Usuarios',
-          children: [
-            { id: 2, name: 'Calendar' },
-            { id: 3, name: 'Chrome : app' },
-            { id: 4, name: 'Webstorm : app' }
-          ]
-        }
-      ],
       showModal: false,
       showUsuarios: false,
       showChamados: false,
@@ -126,69 +112,11 @@ export default {
 </script>
 
 <style scoped>
-
-  li,a{
-    text-decoration: none;
-    color: #000000DE;
-    font-weight: 400;
-    padding: 0px;
-    margin: 0px;
-  }
-
-  /* .modal{
-    border: 1px solid;
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 11;
-    border: 1px solid;
-  } */
-
   .navigation{
     display: grid;
     grid-template-columns: 250px 1fr;
     max-height: 100vh !important;
     /* border: 1px solid; */
 
-  }
-  .navigation-drawer{
-    box-shadow: 0px 0px 20px 1px #DCDCDC;
-    height: 600px;
-  }
-  .navigation-drawer ul {
-    width: 90%;
-  }
-
-  .menuContainer {
-    margin: 15px auto 25px 15px;
-    cursor: pointer;
-  }
-  .menuLabel {
-    display: flex;
-    gap: 8px;
-  }
-  .menuLabel span {
-    font-size: 1.2rem;
-    color: #000;
-  }
-  .menus{
-    margin: 5px 0px 5px 30px;
-    padding: 5px;
-  }
-  /* .menus:hover{
-    padding: 12px;
-  } */
-
-  .menus a {
-    /* padding: 10px 60% 10px 0px; */
-    text-align: start;
-    font-size: 1rem;
-    color: #000000DE;
-    font-weight: 400;
-    cursor: pointer
-  }
-  .menus:hover{
-    background: #f6f6f6;
   }
 </style>

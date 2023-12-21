@@ -23,7 +23,8 @@
               <input
                 class="input"
                 type="text"
-                v-model="dadosEnviar.cpf_cnpj"
+                v-model.trim="dadosEnviar.cpf_cnpj"
+                @blur="formataCPJCNPJ"
                 placeholder="000.000.00-00 ou 00.000.000/0001-00"
               >
             </div>
@@ -184,13 +185,36 @@ export default {
           console.log(result)
           if (result) {
             window.alert('Senha alterada com sucesso')
-            window.history.pushState({}, null, '/login')
+            window.history.pushState({}, null, '/')
             window.location.reload()
           }
         }
       } catch (error) {
         console.log(error)
       }
+    },
+
+    formataCPJCNPJ () {
+      /* eslint operator-linebreak: ["error", "after"] */
+
+      const cnpjRegex = /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/
+      const cpfRegex = /(\d{3})(\d{3})(\d{3})(\d{2})/
+
+      this.dadosEnviar.cpf_cnpj = this.dadosEnviar.cpf_cnpj.length === 14 ?
+        this.dadosEnviar.cpf_cnpj.replace(cnpjRegex, function (regex, arg1, arg2, arg3, arg4, arg5) {
+          return arg1 + '.' + arg2 + '.' + arg3 + '/' + arg4 + '-' + arg5
+        }) :
+        this.dadosEnviar.cpf_cnpj.replace(cpfRegex, function (regex, arg1, arg2, arg3, arg4) {
+          return arg1 + '.' + arg2 + '.' + arg3 + '-' + arg4
+        })
+      console.log(this.dadosEnviar.cpf_cnpj)
+      //     return argumento1 + '.' + argumento2 + '.' + argumento3 + '-' + argumento4
+      // if (this.user.cpf_cnpj.length === 13) {
+      // } else {
+      //   this.user.cpf_cnpj = this.user.cpf_cnpj.replace(cpfRegex, function (regex, argumento1, argumento2, argumento3, argumento4) {
+      //     return argumento1 + '.' + argumento2 + '.' + argumento3 + '-' + argumento4
+      //   })
+      // }
     }
   }
 }

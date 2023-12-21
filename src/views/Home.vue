@@ -3,21 +3,27 @@
     <Menu2
       :sigla="sigla"
     />
-    <section class="navigation">
-      <MenuVertical />
-      <router-view/>
+    <section class="navigation-home">
+      <MenuVertical
+        v-show="showMenu"
+      />
+      <img src="./img/image 1.png" alt="Logo">
     </section>
   </div>
 </template>
-
 <script>
 import MenuVertical from '@/components/MenuVertical.vue'
-import Menu2 from '../../components/Menu2'
+import Menu2 from '@/components/Menu2'
 export default {
-  name: 'theChamdos',
+  name: 'theInicial',
   components: {
-    MenuVertical,
-    Menu2
+    Menu2,
+    MenuVertical
+  },
+  data () {
+    return {
+      showMenu: true
+    }
   },
   computed: {
     sigla () {
@@ -32,12 +38,15 @@ export default {
 }
 </script>
 
-<style>
-  .navigation{
+<style scoped>
+  .navigation-home{
     display: grid;
     grid-template-columns: 250px 1fr;
-    max-height: 100vh !important;
-    /* border: 1px solid; */
+  }
 
+  .navigation-home img {
+    max-width: 55%;
+    justify-self: center;
+    align-self: center;
   }
 </style>

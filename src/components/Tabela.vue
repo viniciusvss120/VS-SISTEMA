@@ -7,21 +7,23 @@
         <thead>
           <tr class="coluna">
             <th class="borda">
-              ID
+              <span>ID</span>
             </th>
             <th class="borda">
-              Name
+              <span>Nome</span>
             </th>
             <th class="borda">
-              E-mail
+              <span>E-mail</span>
             </th>
             <th class="borda">
-              CPF/CNPJ
+              <span>CPF/CNPJ</span>
             </th>
             <th class="borda">
-              Perfil
+              <span>Perfil</span>
             </th>
-            <th class="borda header-acao">Ações</th>
+            <th class="borda header-acao">
+              <span>Ações</span>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -155,8 +157,11 @@ export default {
   .coluna th{
     font-family: Arial, Helvetica, sans-serif;
     color: #000 !important;
-    font-size: 1.2rem !important;
+    font-size: 1rem !important;
     text-align: center;
+  }
+  .col {
+    margin-top: 20px;
   }
 
   .rows{

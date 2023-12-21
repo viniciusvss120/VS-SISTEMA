@@ -1,12 +1,6 @@
 <template>
   <div class="main">
     <div class="criarUser">
-      <!-- <a
-        class="button is-primary voltar"
-        href="/usuarios"
-      >
-        Voltar
-      </a> -->
       <h1 class="title">Criar usuário</h1>
       <div class="field">
         <label class="label">Nome</label>

@@ -1,81 +1,56 @@
 <template>
   <nav class="navbar menu" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="/homeuser">
+      <a
+        class="navbar-item"
+        href="/"
+      >
         <img src="../views/img/image 1.png" alt="logo" width="80">
       </a>
-
-      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="true" data-target="navbarBasicExample">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
     </div>
-
     <div id="navbarBasicExample" class="navbar-menu">
-      <!-- <div class="navbar-start">
-        <a class="navbar-item">
-          Home
-        </a>
-
-        <a class="navbar-item">
-          Documentation
-        </a>
-
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">
-            More
-          </a>
-
-          <div class="navbar-dropdown">
-            <a class="navbar-item">
-              About
-            </a>
-            <a class="navbar-item">
-              Jobs
-            </a>
-            <a class="navbar-item">
-              Contact
-            </a>
-            <hr class="navbar-divider">
-            <a class="navbar-item">
-              Report an issue
-            </a>
-          </div>
-        </div>
-      </div> -->
-
       <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            <!-- <a class="button is-light" href="/criarusuario">
-              <strong>Criar usuário</strong>
-            </a> -->
-            <button
-              class="button is-primary"
-              @click="logout"
-            >
-              {{sigla}}
-            </button>
-          </div>
+        <div
+          class="navbar-item"
+          @mouseup="showCardLogin = !showCardLogin"
+        >
+          <v-avatar
+            color="#228B22"
+            size="50"
+          >
+            <span class="sigla">{{sigla}}</span>
+          </v-avatar>
         </div>
       </div>
     </div>
+    <CardLogin
+      class="cardLogin"
+      v-show="showCardLogin"
+    />
   </nav>
 </template>
 
 <script>
+import CardLogin from '@/components/CardLogin.vue'
 export default {
   name: 'theMenu2',
+  components: {
+    CardLogin
+  },
   props: {
     sigla: {
       type: String
     }
   },
+  data () {
+    return {
+      showCardLogin: false
+    }
+  },
   methods: {
     logout () {
       window.localStorage.clear()
-      this.$router.push('/')
+      this.$router.push('/login')
     }
   }
 }
@@ -88,5 +63,19 @@ export default {
   .menu{
     box-shadow: 0px 0px 10px 1px #DCDCDC;
     padding: 5px;
+    position: relative;
+  }
+
+  .sigla{
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .cardLogin{
+    position: absolute;
+    right: 10px;
+    top: 70px;
+    z-index: 5;
   }
 </style>

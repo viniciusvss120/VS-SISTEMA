@@ -1,34 +1,40 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Usuarios from '../views/usuarios/Usuarios.vue'
+import Usuarios from '../views/cadastro/Usuarios.vue'
 import Chamados from '../views/chamados/Chamados.vue'
 import RecuperarSenha from '../views/RecuperarSenha.vue'
-import ControleUsers from '../views/usuarios/Controle_Users.vue'
-import CriarUsuario from '../views/usuarios/Criar_Usuario'
+import ControleUsers from '../views/cadastro/Controle_Users.vue'
+import CriarUsuario from '../views/cadastro/Criar_Usuario'
+import Produtos from '../views/cadastro/Produtos'
 import Login from '../views/Login'
-import Inicial from '../views/usuarios/Inicial'
+import Home from '../views/Home'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/homeuser',
+    path: '/',
+    name: 'theHome',
+    component: Home
+  },
+  {
+    path: '/cadastro',
     component: Usuarios,
     children: [
       {
-        path: '/',
-        name: 'theInicial',
-        component: Inicial
-      },
-      {
-        path: '/usuarios',
+        path: '/cadastro/usuarios',
         name: 'theControleUsers',
         component: ControleUsers
       },
       {
-        path: '/criarusuario',
+        path: '/cadastro/criarusuario',
         name: 'Criar_Usuario',
         component: CriarUsuario
+      },
+      {
+        path: '/cadastro/produtos',
+        name: 'Produtos',
+        component: Produtos
       }
     ]
   },
@@ -44,7 +50,7 @@ const routes = [
     ]
   },
   {
-    path: '/',
+    path: '/login',
     name: 'theLogin',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

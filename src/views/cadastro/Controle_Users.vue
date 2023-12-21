@@ -48,13 +48,22 @@
           </div>
         </div>
         <div class="field">
-          <label class="label">Perfil</label>
           <div class="control">
-            <input
-              class="input"
-              type="text"
-              v-model="acoesModal.perfil"
-            >
+            <label class="label">Perfil</label>
+            <div class="select">
+              <select
+                v-model.trim="acoesModal.perfil"
+                name="perfil"
+              >
+                <option
+                  v-for="item in perfis"
+                  :key="item"
+                  selected
+                >
+                  {{item}}
+                </option>
+              </select>
+            </div>
           </div>
         </div>
       </v-card-text>
@@ -267,8 +276,11 @@ export default {
         if (result.length === 0) {
           this.msgNaoEncontrado = true
           this.loading = false
+        } else {
+          this.msgNaoEncontrado = false
         }
         this.items = result
+        console.log(this.items)
         this.loading = false
       } catch (error) {
         console.error('Deu ruim', error)
