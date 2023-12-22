@@ -165,7 +165,7 @@ export default {
         this.loading = true
         const verificarToken = await this.verificarCodToken({ cod_token: this.dadosEnviar.codigo })
         console.log(verificarToken)
-        if (verificarToken) {
+        if (verificarToken.data !== 'Esse token não existe ou ja foi utilizado') {
           this.token_Info = verificarToken.data
           this.showCodigo = false
           this.showSenha = true
@@ -208,13 +208,6 @@ export default {
           return arg1 + '.' + arg2 + '.' + arg3 + '-' + arg4
         })
       console.log(this.dadosEnviar.cpf_cnpj)
-      //     return argumento1 + '.' + argumento2 + '.' + argumento3 + '-' + argumento4
-      // if (this.user.cpf_cnpj.length === 13) {
-      // } else {
-      //   this.user.cpf_cnpj = this.user.cpf_cnpj.replace(cpfRegex, function (regex, argumento1, argumento2, argumento3, argumento4) {
-      //     return argumento1 + '.' + argumento2 + '.' + argumento3 + '-' + argumento4
-      //   })
-      // }
     }
   }
 }

@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="main">
     <div class="prodContainer">
       <div class="header">
         <h1>Cadastro de Produto</h1>
         <div class="btn">
           <button>Salvar</button>
           <button>Salvar Mais</button>
-          <button class="sair">Sair</button>
+          <button class="sair" @click="() => this.$router.push('/')">Sair</button>
         </div>
       </div>
       <v-divider></v-divider>
@@ -15,6 +15,15 @@
         <v-divider
         ></v-divider>
         <v-form class="infoProd">
+          <div>
+            <div class="field mt-3">
+              <label class="label">Código*</label>
+              <div class="control">
+                <input type="text" class="input" placeholder="000">
+              </div>
+            </div>
+          </div>
+
           <div class="field mt-3 inputMaiores">
             <label class="label">Descrição*</label>
             <div class="control">
@@ -22,37 +31,34 @@
             </div>
           </div>
 
-          <div>
+        <div>
             <div class="field mt-3">
-              <label class="label">Código</label>
+              <label class="label">Categoria*</label>
               <div class="control">
-                <input type="text" class="input" placeholder="R$ 0,00">
+                <div class="select">
+                  <select>
+                    <option disabled>Selecione uma Categoria</option>
+                    <option>01 - Bebidas</option>
+                    <option>02 - Lanches</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
 
-          <div>
+          <div class="inputMaiores">
             <div class="field mt-3">
               <label class="label">Código de barras</label>
               <div class="control">
-                <input type="text" class="input" placeholder="R$ 0,00">
+                <input type="text" class="input" placeholder="...">
               </div>
             </div>
           </div>
 
-          <div class="field mt-3 inputMaiores">
+          <div class="field mt-3">
             <label class="label">Código NCM*</label>
             <div class="control">
               <input class="input" type="text" placeholder="e.g Alex Smith">
-            </div>
-          </div>
-
-          <div>
-            <div class="field mt-3">
-              <label class="label">Ex Tipi</label>
-              <div class="control">
-                <input type="text" class="input" placeholder="...">
-              </div>
             </div>
           </div>
 
@@ -111,7 +117,7 @@
 
           <div>
             <div class="field mt-3">
-              <label class="label">Custo da Mercadoria*</label>
+              <label class="label">Custo da Mercadoria</label>
               <div class="control">
                 <input type="text" class="input" placeholder="R$ 0,00">
               </div>
@@ -123,6 +129,31 @@
               <label class="label">Preço de Venda*</label>
               <div class="control">
                 <input type="text" class="input" placeholder="R$ 0,00">
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="field mt-4">
+              <label class="label">Estoque Inicial*</label>
+              <div class="control">
+                <input type="text" class="input" placeholder="000">
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="field mt-4">
+              <label class="label">Estoque Mínimo*</label>
+              <div class="control">
+                <input type="text" class="input" placeholder="000">
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="field mt-4">
+              <label class="label">Estoque Maximo*</label>
+              <div class="control">
+                <input type="text" class="input" placeholder="000">
               </div>
             </div>
           </div>
@@ -140,6 +171,11 @@ export default {
 </script>
 
 <style scoped>
+  .main {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 600px;
+  }
   .prodContainer {
     width: 75%;
     /* border: 1px solid; */
@@ -159,7 +195,6 @@ export default {
   .btn{
     display: flex;
     width: 45%;
-    /* border: 1px solid; */
     gap: 10px
   }
 
@@ -188,12 +223,12 @@ export default {
   }
   .infoProd {
     display: flex;
-    justify-content: space-around;
+    justify-content: start;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 8px;
   }
 
   .inputMaiores {
-    width: 55%;
+    width: 50%;
   }
 </style>

@@ -100,7 +100,7 @@
         </div>
       </div>
       <button
-        class="button is-success is-normal mt-6 btn"
+        class="button is-normal mt-6 btnEnviar"
         @click="criarUser"
       >
         Enviar
@@ -237,23 +237,23 @@ export default {
 }
 </script>
 
-<style>
-  .main{
-    overflow-y: scroll;
-    overflow-x: hidden;
-    height: 600px;
-  }
+<style scoped>
+
+.main{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 600px;
+  font-family: 'Roboto', sans-serif;
+}
 .criarUser{
   display: grid;
   max-width: 60%;
   margin: 30px auto;
 }
-.btn{
+.btnEnviar{
   width: 140px;
   justify-self: end;
-}
-.voltar {
-  width: 120px;
-  margin-bottom: 30px;
+  background: #228B22;
+  color: #ffffff;
 }
 </style>

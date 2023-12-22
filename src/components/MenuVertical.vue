@@ -125,7 +125,7 @@ export default {
   .navi-main{
     position: fixed;
     width: 16%;
-    top: 80px;
+    top: 100px;
   }
 
   .menuLabel span {
