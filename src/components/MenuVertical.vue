@@ -4,7 +4,7 @@
       <div class="navi-main">
         <div class="menuContainer usuarios">
           <div class="menuLabel"
-            @click="() => showUsuarios = !showUsuarios"
+            @click="() => showCadastros = !showCadastros"
           >
             <v-icon>
               mdi-pencil-box-outline
@@ -17,49 +17,86 @@
               mdi-menu-down
             </v-icon>
           </div>
-          <ul v-show="showUsuarios">
-            <li
-              class="menus"
+
+            <div class="menuLabel menus"
+              v-show="showCadastros"
+              @click="() => showCadastrosUsers = !showCadastrosUsers"
             >
               <v-icon>
-                mdi-account-multiple
+                mdi-account-box-outline
               </v-icon>
-              <router-link
-                to="/cadastro/usuarios"
+              <span
               >
-                Consultar usuários
-              </router-link>
-            </li>
-            <li
-              class="menus"
+                Usuarios
+              </span>
+              <v-icon>
+                mdi-menu-down
+              </v-icon>
+            </div>
+            <ul v-show="showCadastrosUsers && showCadastros">
+              <li
+                class="menus2"
+              >
+                <v-icon>
+                  mdi-account-multiple
+                </v-icon>
+                <router-link
+                  to="/cadastro/usuarios"
+                >
+                  Consultar usuários
+                </router-link>
+              </li>
+              <li
+                class="menus2"
+              >
+                <v-icon>
+                  mdi-account-edit
+                </v-icon>
+                <router-link
+                  to="/cadastro/criarusuario"
+                >
+                  Cadastrar usuários
+                </router-link>
+              </li>
+            </ul>
+
+            <div class="menuLabel menus"
+              v-show="showCadastros"
+              @click="() => showCadastrosProdutos = !showCadastrosProdutos"
             >
               <v-icon>
-                mdi-account-edit
+                mdi-food-outline
               </v-icon>
-              <router-link
-                to="/cadastro/criarusuario"
+              <span
               >
-                Cadastrar usuários
-              </router-link>
-            </li>
-            <li
-              class="menus"
-            >
+                Produtos
+              </span>
               <v-icon>
-                mdi-food
+                mdi-menu-down
               </v-icon>
-              <router-link
-                to="/cadastro/produtos"
+            </div>
+
+            <ul
+              v-show="showCadastrosProdutos && showCadastros">
+              <li
+                class="menus2"
               >
-                Cadastrar produtos
-              </router-link>
-            </li>
-          </ul>
+                <v-icon>
+                  mdi-food
+                </v-icon>
+                <router-link
+                  to="/cadastro/produtos"
+                >
+                  Cadastrar produtos
+                </router-link>
+              </li>
+            </ul>
         </div>
-        <div class="menuContainer chamados"
+
+        <div class="menuContainer vendas"
         >
           <div class="menuLabel"
-            @click="() => showChamados = !showChamados"
+            @click="() => showVendas = !showVendas"
           >
             <v-icon>
               mdi-cart-variant
@@ -72,15 +109,15 @@
               mdi-menu-down
             </v-icon>
           </div>
-          <ul v-show="showChamados">
+          <ul v-show="showVendas">
             <li
-              class="menus"
+              class="menus2"
             >
               <v-icon>
                 mdi-cart
               </v-icon>
               <router-link
-                to="/chamados"
+                to="/vendas/vendasdireta"
               >
                 Venda direta
               </router-link>
@@ -99,8 +136,10 @@ export default {
   data () {
     return {
       showModal: false,
-      showUsuarios: false,
-      showChamados: false,
+      showCadastros: false,
+      showCadastrosUsers: false,
+      showCadastrosProdutos: false,
+      showVendas: false,
       acoesModal: {}
     }
   }
@@ -124,7 +163,6 @@ export default {
   }
   .navi-main{
     position: fixed;
-    width: 16%;
     top: 100px;
   }
 
@@ -134,7 +172,7 @@ export default {
     color: #000;
   }
 
-  .menus{
+   .menus{
     margin: 5px 0px 5px 30px;
     padding: 5px;
   }
@@ -148,6 +186,22 @@ export default {
     cursor: pointer
   }
   .menus:hover{
+    background: #f6f6f6;
+  }
+
+  .menus2{
+    margin: 5px 0px 5px 40px;
+    padding: 5px;
+  }
+  .menus2 a {
+    /* padding: 10px 60% 10px 0px; */
+    text-align: start;
+    font-size: 1rem;
+    color: #000000DE;
+    font-weight: 400;
+    cursor: pointer
+  }
+  .menus2:hover{
     background: #f6f6f6;
   }
 </style>

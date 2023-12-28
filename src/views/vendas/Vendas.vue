@@ -3,8 +3,8 @@
     <Menu2
       :sigla="sigla"
     />
-    <section class="navigation">
-      <MenuVertical />
+    <section  ref="section">
+      <MenuVertical v-show="false" />
       <router-view/>
     </section>
   </div>
@@ -12,12 +12,17 @@
 
 <script>
 import MenuVertical from '@/components/MenuVertical.vue'
-import Menu2 from '../../components/Menu2'
+import Menu2 from '@/components/Menu2'
 export default {
-  name: 'theChamdos',
+  name: 'theVendas',
   components: {
     MenuVertical,
     Menu2
+  },
+  data () {
+    return {
+      classLayout: 'layout'
+    }
   },
   computed: {
     sigla () {
@@ -28,16 +33,22 @@ export default {
       // .slice(0, 2).toLocaleUpperCase()
       return siglaUser
     }
+  },
+
+  created () {
+    if (window.location.pathname === '/vendas/vendasdireta') {
+      const section = this.$refs
+
+      section.clessList.remove('navigation')
+      section.clessList.add(this.classLayout)
+      console.log(section)
+    }
   }
 }
 </script>
 
-<style>
-  .navigation{
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    max-height: 100vh !important;
-    /* border: 1px solid; */
-
+<style scoped>
+  .clessLayout {
+    display: flex;
   }
 </style>

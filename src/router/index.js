@@ -1,10 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
 import Usuarios from '../views/cadastro/Usuarios.vue'
-import Chamados from '../views/chamados/Chamados.vue'
 import RecuperarSenha from '../views/RecuperarSenha.vue'
 import ControleUsers from '../views/cadastro/Controle_Users.vue'
 import CriarUsuario from '../views/cadastro/Criar_Usuario'
+
+import Vendas from '../views/vendas/Vendas.vue'
+import VendasDireta from '../views/vendas/Vendas_direta.vue'
+
 import Produtos from '../views/cadastro/Produtos'
 import Login from '../views/Login'
 import Home from '../views/Home'
@@ -39,13 +43,14 @@ const routes = [
     ]
   },
   {
-    path: '/chamados',
-    name: 'theChamados',
-    component: Chamados,
+    path: '/vendas',
+    name: 'theVendas',
+    component: Vendas,
     children: [
       {
-        path: '/chamados/meuschamados',
-        name: 'theMeusChamados'
+        path: '/vendas/vendasdireta',
+        name: 'theVendasDireta',
+        component: VendasDireta
       }
     ]
   },

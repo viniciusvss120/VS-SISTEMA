@@ -9,5 +9,16 @@ export default {
     } catch (error) {
       return error
     }
+  },
+
+  async listar ({ commit }, data) {
+    try {
+      const result = await axios.get('http://localhost:3002/listprod/' + data)
+
+      commit('listProd', result.data)
+      return result.data[0]
+    } catch (error) {
+      return error
+    }
   }
 }

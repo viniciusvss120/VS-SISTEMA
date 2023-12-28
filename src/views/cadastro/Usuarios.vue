@@ -112,11 +112,4 @@ export default {
 </script>
 
 <style scoped>
-  .navigation{
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    max-height: 100vh !important;
-    /* border: 1px solid; */
-
-  }
 </style>

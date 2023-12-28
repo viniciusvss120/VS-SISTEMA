@@ -3,7 +3,7 @@
     <Menu2
       :sigla="sigla"
     />
-    <section class="navigation-home">
+    <section class="navigation">
       <MenuVertical
         v-show="showMenu"
       />
@@ -39,12 +39,8 @@ export default {
 </script>
 
 <style scoped>
-  .navigation-home{
-    display: grid;
-    grid-template-columns: 250px 1fr;
-  }
 
-  .navigation-home img {
+  .navigation img {
     max-width: 55%;
     justify-self: center;
     align-self: center;

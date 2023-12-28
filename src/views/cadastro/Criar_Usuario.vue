@@ -1,110 +1,116 @@
 <template>
   <div class="main">
     <div class="criarUser">
-      <h1 class="title">Criar usuário</h1>
-      <div class="field">
-        <label class="label">Nome</label>
-        <div class="control">
-          <input
-            :class="`input ${classInput}`"
-            v-model.trim="user.name"
-            name="name"
-            type="text"
-            placeholder="Nome Completo"
-          >
+      <div class="header">
+        <h1>Novo Usuário</h1>
+        <div class="btn">
+          <button @click="criarUser">Salvar</button>
+          <button>Salvar Mais</button>
+          <button class="sair" @click="() => this.$router.push('/')">Sair</button>
         </div>
-        <p
-          class="help is-danger"
-          v-show="msg.name"
-        >
-          Campo obrigatório
-        </p>
       </div>
-      <div class="field">
-        <label class="label">E-mail</label>
-        <div class="control">
-          <input
-            :class="`input`"
-            v-model.trim="user.email"
-            name="email"
-            type="email"
-            placeholder="user@gmail.com">
-        </div>
-        <p
-          class="help is-danger"
-          v-show="msg.email"
-        >
-          Campo obrigatório
-        </p>
-      </div>
-        <div class="field">
-          <label class="label">Senha</label>
-          <div class="control">
-            <input
-              :class="`input ${classInput}`"
-              v-model.trim="user.password"
-              name="password"
-              type="password"
-              placeholder="Senha com no minímo 8 digitos"
-            >
-          </div>
-          <p
-            class="help is-danger"
-            v-show="msg.password"
-          >
-            Campo obrigatório
-          </p>
-      </div>
-        <div class="field">
-          <label class="label">CPF/CNPJ</label>
-          <div class="control">
-            <input
-              :class="`input ${classInput}`"
-              v-model.trim="user.cpf_cnpj"
-              @blur="formataCPJCNPJ"
-              type="text"
-              name="cpf_cnpj"
-              placeholder="00.000.000/0001-00 ou 111.111.111-11"
-            >
-          </div>
-          <p
-            class="help is-danger"
-            v-show="msg.cpf_cnpj"
-          >
-            Campo obrigatório
-          </p>
-      </div>
-      <div class="field">
-        <label class="label">Perfil</label>
-        <div class="control">
-          <div class="select">
-            <select
-              v-model.trim="user.perfil"
-              name="perfil"
-            >
-              <option
-                v-for="item in perfil"
-                :key="item"
-                selected
+      <v-divider></v-divider>
+      <div class="formUser">
+        <v-form class="infoUser">
+          <div class="field">
+            <label class="label">Nome</label>
+            <div class="control">
+              <input
+                :class="`input ${classInput} inputMaiores`"
+                v-model.trim="user.name"
+                name="name"
+                type="text"
+                placeholder="Nome Completo"
               >
-                {{item}}
-              </option>
-            </select>
+            </div>
+            <p
+              class="help is-danger"
+              v-show="msg.name"
+            >
+              Campo obrigatório
+            </p>
           </div>
-          <p
-            class="help is-danger"
-            v-show="msg.perfil"
-          >
-            Campo obrigatório
-          </p>
-        </div>
+          <div class="field">
+            <label class="label">E-mail</label>
+            <div class="control">
+              <input
+                :class="`input`"
+                v-model.trim="user.email"
+                name="email"
+                type="email"
+                placeholder="user@gmail.com">
+            </div>
+            <p
+              class="help is-danger"
+              v-show="msg.email"
+            >
+              Campo obrigatório
+            </p>
+          </div>
+            <div class="field">
+              <label class="label">Senha</label>
+              <div class="control">
+                <input
+                  :class="`input ${classInput}`"
+                  v-model.trim="user.password"
+                  name="password"
+                  type="password"
+                  placeholder="Senha com no minímo 8 digitos"
+                >
+              </div>
+              <p
+                class="help is-danger"
+                v-show="msg.password"
+              >
+                Campo obrigatório
+              </p>
+          </div>
+            <div class="field">
+              <label class="label">CPF/CNPJ</label>
+              <div class="control">
+                <input
+                  :class="`input ${classInput}`"
+                  v-model.trim="user.cpf_cnpj"
+                  @blur="formataCPJCNPJ"
+                  type="text"
+                  name="cpf_cnpj"
+                  placeholder="00.000.000/0001-00 ou 111.111.111-11"
+                >
+              </div>
+              <p
+                class="help is-danger"
+                v-show="msg.cpf_cnpj"
+              >
+                Campo obrigatório
+              </p>
+          </div>
+          <div class="field">
+            <label class="label">Perfil</label>
+            <div class="control">
+              <div class="select">
+                <select
+                  v-model.trim="user.perfil"
+                  name="perfil"
+                >
+                  <option
+                    v-for="item in perfil"
+                    :key="item"
+                    selected
+                  >
+                    {{item}}
+                  </option>
+                </select>
+              </div>
+              <p
+                class="help is-danger"
+                v-show="msg.perfil"
+              >
+                Campo obrigatório
+              </p>
+            </div>
+          </div>
+        </v-form>
       </div>
-      <button
-        class="button is-normal mt-6 btnEnviar"
-        @click="criarUser"
-      >
-        Enviar
-      </button>
 
     </div>
   </div>
@@ -178,7 +184,7 @@ export default {
         if (this.validarForm()) {
           const result = await this.criar(this.user)
           console.log(result)
-          window.history.pushState({}, null, '/usuarios')
+          window.history.pushState({}, null, '/cadastro/usuarios')
           window.location.reload()
         } else {
           console.log('Deu ruim')
@@ -246,14 +252,48 @@ export default {
   font-family: 'Roboto', sans-serif;
 }
 .criarUser{
-  display: grid;
-  max-width: 60%;
-  margin: 30px auto;
+    width: 65%;
+    /* border: 1px solid; */
+    margin: 50px auto;
 }
-.btnEnviar{
-  width: 140px;
-  justify-self: end;
-  background: #228B22;
-  color: #ffffff;
-}
+
+  .header{
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Roboto', sans-serif;
+    color: #000000;
+    /* border: 1px solid; */
+  }
+  .header h1 {
+    font-size: 2rem;
+  }
+  .btn{
+    display: flex;
+    width: 45%;
+    gap: 10px
+  }
+
+  .btn button {
+    width: 260px;
+    padding: 5px;
+    background: #228B22;
+    color: #fff;
+    border-radius: 5px;
+  }
+  .sair {
+    background: red !important;
+    color: #ffffff !important;
+    /* border: 1px solid; */
+  }
+
+  .infoUser {
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  /* .inputMaiores {
+    width: 100%;
+  } */
 </style>
