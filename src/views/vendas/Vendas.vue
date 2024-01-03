@@ -2,6 +2,7 @@
   <div>
     <Menu2
       :sigla="sigla"
+      v-show="false"
     />
     <section  ref="section">
       <MenuVertical v-show="false" />
@@ -36,19 +37,17 @@ export default {
   },
 
   created () {
-    if (window.location.pathname === '/vendas/vendasdireta') {
-      const section = this.$refs
+    // if (window.location.pathname === '/vendas/vendasdireta') {
+    //   const section = this.$refs
 
-      section.clessList.remove('navigation')
-      section.clessList.add(this.classLayout)
-      console.log(section)
-    }
+    //   section.clessList.remove('navigation')
+    //   section.clessList.add(this.classLayout)
+    //   console.log(section)
+    // }
   }
 }
 </script>
 
 <style scoped>
-  .clessLayout {
-    display: flex;
-  }
+
 </style>

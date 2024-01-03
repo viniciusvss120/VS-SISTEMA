@@ -149,7 +149,7 @@ export default {
 <style scoped>
   .navigation-drawer{
     box-shadow: 0px 0px 20px 1px #DCDCDC;
-    height: 600px;
+    height: 100vh;
     position: relative;
   }
 

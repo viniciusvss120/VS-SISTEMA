@@ -1,5 +1,6 @@
 export default {
   listProd (state, payload) {
-    state.produtos = payload
+    const nomeProd = payload.map((item) => item.descricao)
+    state.produtos = nomeProd
   }
 }

@@ -391,7 +391,7 @@ export default {
   .main{
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 600px;
+    height: 100vh;
   }
   .paginacao{
     margin-top: 20px;
