@@ -1,6 +1,9 @@
 <template>
   <v-app>
-    <div class="containerVendas"  @keyup.esc="sair">
+    <div
+      class="containerVendas"
+      @keyup.esc="sair"
+      >
       <main class="main">
         <div class="filtro">
           <div class="descricao">
@@ -64,14 +67,21 @@
         </div>
         <!-- <button class="button">Finalizar</button> -->
       </main>
+      <div class="modalVendas" v-show="modalFinalizarVenda" >
+        <ModalConfirma
+          @fechar="modalFinalizarVenda = false"
+          @sim="finalizarVenda"
+          @nao="modalFinalizarVenda = false"
+        />
+      </div>
       <div class="formaPagamento">
         <div class="pagamentoOpcoes">
-          <v-form class="opcoesPagamento">
+          <v-form class="opcoesPagamento" @submit="prevenirEvento">
             <div class="field">
               <label class="label">Forma de pagamento</label>
               <div class="control">
                 <div class="select">
-                  <select>
+                  <select v-model="pagamento.formaPagamento">
                     <option
                       v-for="item in opcoesPagamento"
                       :key="item"
@@ -85,7 +95,7 @@
             <div class="field">
               <label class="label">Valor</label>
               <div class="control">
-                <input type="text" class="input" placeholder="R$ 0,00" />
+                <input type="text" class="input" placeholder="R$ 0,00" v-model="pagamento.valor" />
               </div>
             </div>
             <div class="btnIncluir">
@@ -93,6 +103,13 @@
             </div>
           </v-form>
           <div class="demonstrativo">
+            <!-- <v-data-table
+              :headers="headersPagamento"
+              :items="tablePagamento"
+              class="tabelaPagamento"
+              disable-sort
+              hide-default-footer
+            /> -->
             <v-simple-table class="tabelaPagamento">
               <thead>
                 <tr>
@@ -102,6 +119,9 @@
                   <th class="text-left">
                     Valor
                   </th>
+                  <th class="text-left">
+                    Ações
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -110,20 +130,40 @@
                   :key="item"
                 >
                   <td>{{item.formaPagamento}}</td>
-                  <td>item.valor</td>
+                  <td>{{item.valor}}</td>
+                  <td>
+                    <v-icon
+                      class="acao-icon icon"
+                      @click="deletarPagamento(item)"
+                      color="#228B22"
+                    >
+                      mdi-delete
+                    </v-icon>
+                  </td>
                 </tr>
               </tbody>
             </v-simple-table>
             <div>
               <div class="field desconto">
                 <label>Desconto:</label>
+                <div class="select">
+                  <select v-model.trim="descontoOperacao">
+                    <option>
+                      R$
+                    </option>
+                    <option>
+                      %
+                    </option>
+                  </select>
+                </div>
                 <input type="text" class="input" v-model="produto.desconto" placeholder="R$ 0,00">
+                <button class="button" @click="incluirDesconto"><v-icon>mdi-plus-thick</v-icon></button>
               </div>
               <v-divider></v-divider>
               <div class="valores">
                 <div class="vizualizarValores">
                   <span>Valor pago</span>
-                  {{pagamento.valor}}
+                  {{rodape.valorPago}}
                   <v-divider
                   vertical
                   ></v-divider>
@@ -135,19 +175,17 @@
                 <div class="vizualizarValores troco">
                   <v-divider class="divider troco"></v-divider>
                   <span>Troco</span>
-                  0,00
+                  {{rodape.troco}}
                 </div>
               </div>
             </div>
 
           </div>
         </div>
-
           <img src="../img/image 1.png" alt="">
-
         <div class="comandos" >
           <div>
-            <button class="button">Finalizar (F1)</button>
+            <button class="button" @click="modalFinalizarVenda = true">Finalizar (F1)</button>
             <button class="button">PV (F2)</button>
             <button class="button">Consultar Vendas</button>
             <button class="button">Cancelar Vendas (F9)</button>
@@ -164,8 +202,12 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import ModalConfirma from '@/components/ModalConfirma.vue'
 export default {
   name: 'theVendasDireta',
+  components: {
+    ModalConfirma
+  },
   data () {
     return {
       headers: [
@@ -184,11 +226,22 @@ export default {
         { text: 'Desconto', value: 'desconto' },
         { text: 'Valor Total', value: 'total' }
       ],
+      headersPagamento: [
+        {
+          text: 'Forma de pagamento',
+          value: 'formaPagamento'
+        },
+        {
+          text: 'Valor',
+          value: 'valor'
+        }
+      ],
       items: [],
       filtro: {
         codigo: null,
         item: ''
       },
+      descontoOperacao: '',
       produto: {
         codigo: null,
         item: '',
@@ -198,25 +251,35 @@ export default {
         total: null
       },
       produtosNome: [],
+      modalFinalizarVenda: false,
       rodape: {
         qtdItens: 0,
         subTotal: 0,
         desconto: 0,
         valorTotal: 0,
+        valorPago: 0,
         troco: 0
       },
       opcoesPagamento: ['Cartão Débito', 'Cartão Crédito', 'Dinheiro'],
       pagamento: {
         formaPagamento: '',
-        valor: 0
+        valor: null
       },
-      tablePagamento: []
+      tablePagamento: [],
+      venda: {
+        numeroVenda: null,
+        items: [],
+        cartao_debito: null,
+        cartao_credito: null,
+        dinheiro: null,
+        desconto: null,
+        valorTotal: null
+      }
     }
   },
   async created () {
     await this.listar()
     this.listProd()
-    console.log(this.produtos)
   },
   computed: {
     ...mapState('produtos', ['produtos'])
@@ -239,16 +302,16 @@ export default {
 
           this.items.push(itemsProd)
           this.filtro.codigo = null
+          this.filtro.item = ''
           this.produto.quantidade = null
           this.produto.valor_unit = 0
           this.produto.total = 0
 
           this.rodape.qtdItens = this.items.length
+          this.rodape.desconto = itemsProd.desconto
           this.rodape.subTotal += itemsProd.total
           this.rodape.valorTotal = this.rodape.subTotal - this.rodape.desconto
         }
-
-        console.log(this.items)
       } catch (error) {
         console.error(error)
       }
@@ -275,7 +338,65 @@ export default {
       console.log('ativo')
     },
     incluirPagamento () {
-      this.tablePagamento.push(this.pagamento)
+      const itemPagamento = {}
+
+      Object.assign(itemPagamento, this.pagamento)
+      this.tablePagamento.push(itemPagamento)
+
+      const valorTabelaPagamento = this.tablePagamento.reduce((acumulador, valorAtual) => acumulador + Number(valorAtual.valor), 0)
+
+      this.rodape.valorPago = valorTabelaPagamento
+      this.pagamento.valor = null
+      this.pagamento.formaPagamento = ''
+
+      this.rodape.troco = this.rodape.valorPago - this.rodape.valorTotal
+    },
+    incluirDesconto () {
+      const descontoPercentual = this.produto.desconto / 100 * this.rodape.valorTotal
+      this.rodape.desconto = this.descontoOperacao === '%' ? descontoPercentual : this.produto.desconto
+      console.log(this.rodape.desconto)
+
+      this.rodape.valorTotal = this.rodape.subTotal - this.rodape.desconto
+      this.rodape.troco = this.rodape.valorPago - this.rodape.valorTotal
+    },
+    deletarPagamento (item) {
+      const newTablePagamento = this.tablePagamento.filter(pagamento => pagamento !== item)
+      this.tablePagamento = newTablePagamento
+
+      this.rodape.valorPago -= item.valor
+      this.rodape.troco = this.rodape.valorPago - this.rodape.valorTotal
+      console.log(newTablePagamento)
+    },
+    finalizarVenda () {
+      const valorDebito = this.tablePagamento.reduce((acumulador, item) => {
+        const debito = item.formaPagamento === 'Cartão Débito' ? acumulador + Number(item.valor) : acumulador
+        return debito
+      }, 0)
+      const valorCredito = this.tablePagamento.reduce((acumulador, item) => {
+        const debito = item.formaPagamento === 'Cartão Crédito' ? acumulador + Number(item.valor) : acumulador
+        return debito
+      }, 0)
+      const valorDinheiro = this.tablePagamento.reduce((acumulador, item) => {
+        const debito = item.formaPagamento === 'Dinheiro' ? acumulador + Number(item.valor) : acumulador
+        return debito
+      }, 0)
+
+      const venda = {
+        numeroVenda: null,
+        items: this.items,
+        cartao_debito: valorDebito,
+        cartao_credito: valorCredito,
+        dinheiro: valorDinheiro,
+        desconto: this.rodape.desconto,
+        valorTotal: this.rodape.valorTotal,
+        troco: this.rodape.troco
+      }
+
+      console.log(venda)
+      this.modalFinalizarVenda = false
+    },
+    prevenirEvento (e) {
+      e.preventDefault()
     }
   }
 }
@@ -287,10 +408,19 @@ export default {
     height: 100vh;
     /* border: 1px solid; */
     width: 99%;
+    position: relative;
     display: grid;
     grid-template-columns: 1fr 650px;
   }
-
+  .modalVendas{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* background: #000;
+    color: #ffffff; */
+    /* opacity: 0.8; */
+    z-index: 41;
+  }
   .filtro{
     display: grid;
     margin: 0 auto;
@@ -374,7 +504,7 @@ export default {
     font-family: 'Roboto', sans-serif;
     font-size: 1.1rem;
     gap: 15px;
-    width: 50%;
+    width: 90%;
   }
   img{
     max-width: 18%;
