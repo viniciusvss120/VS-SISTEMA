@@ -1,6 +1,6 @@
 <template>
   <div >
-    <div class="modalContainer">
+    <div class="modalContainer" v-show="showFinalizarVenda">
       <v-btn icon dark class="fechar" @click="fechar"><v-icon>mdi-close</v-icon></v-btn>
       <div class="msg">
         <p>Deseja finalizar a Venda ?</p>
@@ -8,7 +8,39 @@
       <v-divider></v-divider>
       <div class="btnModal">
         <button class="button sim" @click="sim">Sim</button>
-        <button class="button nao" @click="nao">Não</button>
+        <button class="button nao" @click="fechar">Não</button>
+      </div>
+    </div>
+
+    <div class="modalContainer" v-show="showModal.deletar">
+      <v-btn icon dark class="fechar" @click="fechar"><v-icon>mdi-close</v-icon></v-btn>
+      <div class="msg">
+        <p>Deseja excluir este item ?</p>
+      </div>
+      <div class="qtd">
+        <label>Quantidade</label>
+        <input class="input" type="text" placeholder="0" v-model.trim="quantidade">
+      </div>
+      <v-divider></v-divider>
+      <div class="btnModal">
+        <button class="button sim" @click="deletarVenda">Sim</button>
+        <button class="button nao" @click="fechar">Não</button>
+      </div>
+    </div>
+
+    <div class="modalContainer" v-show="showModal.editar">
+      <v-btn icon dark class="fechar" @click="fechar"><v-icon>mdi-close</v-icon></v-btn>
+      <div class="msg">
+        <p>Alterar Quantidade</p>
+      </div>
+      <div class="qtd">
+        <label>Quantidade</label>
+        <input class="input" type="text" placeholder="0" v-model.trim="quantidade">
+      </div>
+      <v-divider></v-divider>
+      <div class="btnModal">
+        <button class="button sim" @click="editVenda">Salvar</button>
+        <button class="button nao" @click="fechar">Cancelar</button>
       </div>
     </div>
   </div>
@@ -17,15 +49,49 @@
 <script>
 export default {
   name: 'theModalConfirma',
+  props: {
+    showModal: {
+      type: Object
+    }
+  },
+  data () {
+    return {
+      modalFinalizarVenda: true,
+      quantidade: null
+    }
+  },
+  created () {
+    console.log(this.showModal)
+  },
+  computed: {
+    showFinalizarVenda () {
+      const modal = !this.showModal.editar && !this.showModal.deletar ? this.modalFinalizarVenda : !this.modalFinalizarVenda
+
+      return modal
+    }
+  },
   methods: {
     fechar () {
       this.$emit('fechar')
     },
-    nao () {
-      this.$emit('nao')
-    },
     sim () {
       this.$emit('sim')
+    },
+    editVenda () {
+      const item = {
+        nomeProduto: this.showModal.item,
+        quantidade: this.quantidade
+
+      }
+      this.$emit('editVenda', item)
+    },
+    deletarVenda () {
+      const item = {
+        nomeProduto: this.showModal.item,
+        quantidade: this.quantidade
+
+      }
+      this.$emit('deletarVenda', item)
     }
   }
 }

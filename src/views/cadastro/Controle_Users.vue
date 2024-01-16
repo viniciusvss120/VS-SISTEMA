@@ -13,60 +13,6 @@
       @excluir="deleteUser"
       :acoesModal="acoesModal"
     >
-      <v-card-text v-show="acoesModal.editar | acoesModal.deletar" >
-          <div class="field">
-            <label class="label">Name</label>
-            <div class="control">
-              <input
-                class="input"
-                type="text"
-                v-model="acoesModal.name"
-                placeholder="Nome"
-              >
-            </div>
-          </div>
-          <div class="field">
-          <label class="label">Email</label>
-          <div class="control">
-            <input
-              class="input"
-              type="email"
-              v-model="acoesModal.email"
-              placeholder="usuario@gmail.com"
-              >
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">CPF/CNPJ</label>
-          <div class="control">
-            <input
-              class="input"
-              type="text"
-              v-model="acoesModal.cpf_cnpj"
-              placeholder="00.000.000/0001-00"
-              >
-          </div>
-        </div>
-        <div class="field">
-          <div class="control">
-            <label class="label">Perfil</label>
-            <div class="select">
-              <select
-                v-model.trim="acoesModal.perfil"
-                name="perfil"
-              >
-                <option
-                  v-for="item in perfis"
-                  :key="item"
-                  selected
-                >
-                  {{item}}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </v-card-text>
     </Modal2>
 
     <Filtro
@@ -145,11 +91,13 @@
     <Tabela
       v-if="loading === false"
       v-show="msgNaoEncontrado === false"
+      class="table"
       :dados="showUsers"
+      :headers="headers"
       @vizualizar="abrirModal"
       @editar="abrirModal"
       @deletar="abrirModal"
-    />
+    ></Tabela>
     <v-pagination
       class="paginacao"
       v-if="loading === false"
@@ -194,7 +142,7 @@ export default {
         },
         {
           text: 'Nome',
-          value: 'nome',
+          value: 'name',
           align: 'start'
         },
         {
@@ -203,8 +151,13 @@ export default {
           align: 'start'
         },
         {
-          text: 'Telefone',
-          value: 'telefone',
+          text: 'CPF/CNPJ',
+          value: 'cpf_cnpj',
+          align: 'start'
+        },
+        {
+          text: 'Perfil',
+          value: 'perfil',
           align: 'start'
         }
       ],
@@ -371,6 +324,12 @@ export default {
     align-items: center;
     gap: 15px;
     margin: 10px auto;
+  }
+
+  .table {
+    width: 90%;
+    margin: 0 auto;
+    box-shadow: 0px 0px 10px 1px #DCDCDC;
   }
   /* .filtro-exe{
     display: flex;

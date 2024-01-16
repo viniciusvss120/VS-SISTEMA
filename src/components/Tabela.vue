@@ -5,23 +5,16 @@
     >
       <template v-slot:default>
         <thead>
-          <tr class="coluna">
-            <th class="borda">
-              <span>ID</span>
+          <tr
+            class="coluna"
+          >
+            <th
+              v-for="item in headers"
+              :key="item.text"
+            >
+              <span>{{item.text}}</span>
             </th>
-            <th class="borda">
-              <span>Nome</span>
-            </th>
-            <th class="borda">
-              <span>E-mail</span>
-            </th>
-            <th class="borda">
-              <span>CPF/CNPJ</span>
-            </th>
-            <th class="borda">
-              <span>Perfil</span>
-            </th>
-            <th class="borda header-acao">
+            <th class="header-acao2">
               <span>Ações</span>
             </th>
           </tr>
@@ -33,12 +26,14 @@
             class="rows"
           >
 
-            <td class="borda">{{item.id}}</td>
-            <td class="borda">{{item.name}}</td>
-            <td class="borda">{{item.email}}</td>
-            <td class="borda">{{item.cpf_cnpj}}</td>
-            <td class="borda">{{item.perfil}}</td>
-            <td class="borda acao">
+            <td
+              v-for="header in headers"
+              :key="header.value"
+              class="borda"
+            >
+              {{item[header.value]}}
+            </td>
+            <td class="borda acao" v-show="pathname === '/cadastro/usuarios'">
               <v-icon
                 class="acao-icon icon"
                 @click="editar(item.id)"
@@ -62,6 +57,22 @@
                 mdi-delete
               </v-icon>
             </td>
+            <td class="acao dots" v-show="pathname === '/vendas/vendasdireta'">
+              <v-icon
+                class="acao-icon icon dots"
+                @click="editar(item.codigo)"
+                color="#228B22"
+              >
+                mdi-pencil
+              </v-icon>
+              <v-icon
+                class="acao-icon icon dots"
+                @click="deletar(item.codigo)"
+                color="#228B22"
+              >
+                mdi-delete
+              </v-icon>
+            </td>
           </tr>
         </tbody>
       </template>
@@ -75,6 +86,9 @@ export default {
   props: {
     dados: {
       type: Array
+    },
+    headers: {
+      type: Array
     }
   },
   data () {
@@ -84,14 +98,20 @@ export default {
         editar: false,
         deletar: false
       },
-      user: {
+      item: {
         id: null,
         name: '',
         email: '',
         cpf_cnpj: '',
         perfil: ''
-      }
+      },
+      produto: {},
+      pathname: false
     }
+  },
+  created () {
+    this.pathname = window.location.pathname
+    console.log(this.dados)
   },
   methods: {
     vizualizar (id) {
@@ -112,10 +132,15 @@ export default {
       this.acoes.visualizar = false
       this.acoes.deletar = false
       this.acoes.editar = true
-      this.findUser(id)
+      console.log(id)
+      if (window.location.pathname === '/cadastro/usuarios') {
+        this.findUser(id)
+      } else {
+        this.findProd(id)
+      }
       const acoes = {
         ...this.acoes,
-        ...this.user
+        ...this.item
       }
       this.$emit('editar', acoes)
     },
@@ -124,17 +149,25 @@ export default {
       this.acoes.editar = false
       this.acoes.deletar = true
 
-      this.findUser(id)
+      if (window.location.pathname === '/cadastro/usuarios') {
+        this.findUser(id)
+      } else {
+        this.findProd(id)
+      }
       const acoes = {
         ...this.acoes,
-        ...this.user
+        ...this.item
       }
       this.$emit('deletar', acoes)
     },
     findUser (id) {
       const user = this.dados.find(index => index.id === id)
-
-      this.user = user
+      this.item = user
+      // Object.assign(this.user, user)
+    },
+    findProd (codigo) {
+      const produto = this.dados.find(index => index.codigo === codigo)
+      this.item = produto
       // Object.assign(this.user, user)
     }
 
@@ -143,31 +176,24 @@ export default {
 </script>
 
 <style scoped>
-
-.table{
-    max-width: 90%;
-    margin: 0 auto;
-    box-shadow: 0px 0px 10px 1px #DCDCDC;
-    /* border-radius: 10px; */
-  }
-  .borda{
-    border-right: 1px solid #363636;
-  }
-
   .coluna th{
     font-family: Arial, Helvetica, sans-serif;
-    color: #000 !important;
-    font-size: 1rem !important;
-    text-align: center;
+    color: #000000 !important;
+    font-size: .950rem !important;
+    width: 18%;
+    /* border: 1px solid; */
+    position: relative;
   }
-  .col {
-    margin-top: 20px;
+  .coluna th span {
+    position: absolute;
+    /* border: 1px solid; */
+    left: 35px;
+    top: 12px;
   }
-
   .rows{
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
+    font-weight: 500;
   }
 
   .acao{
@@ -178,14 +204,22 @@ export default {
     /* gap: 20px; */
   }
 
+  .dots{
+    max-width: 150px !important;
+  }
   .icon {
     padding: 15px 20px 15px 20px;
   }
-  .icon:hover {
-    background: #363636;
-  }
+  /* .icon:hover {
+    background: #d2d2d2;
+    opacity: 0.8;
+  } */
 
   .header-acao{
     width: 200px;
+  }
+
+  .header-acao2{
+    width: 100px;
   }
 </style>

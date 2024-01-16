@@ -48,20 +48,22 @@
         </div>
         <v-divider></v-divider>
         <div class="tableItem">
-          <v-data-table
+          <Tabela
             :headers="headers"
-            :items="items"
-            disable-sort
-            hide-default-footer
-          />
+            :dados="items"
+            @editar="abrirModal"
+            @deletar="abrirModal"
+            class="table"
+          >
+          </Tabela>
         </div>
         <div class="informacoes" ref="rodape">
           <ul>
-            <li>
+            <li class="rodape-item">
               Itens: {{rodape.qtdItens}}
             </li>
-            <li>SubTotal:R$ {{rodape.subTotal}}</li>
-            <li>Desconto:R$ {{rodape.desconto}}</li>
+            <li class="rodape-item">SubTotal:R$ {{rodape.subTotal}}</li>
+            <li class="rodape-item">Desconto:R$ {{rodape.desconto}}</li>
             <li class="total">Total: R$ {{rodape.valorTotal}}</li>
           </ul>
         </div>
@@ -69,9 +71,11 @@
       </main>
       <div class="modalVendas" v-show="modalFinalizarVenda" >
         <ModalConfirma
-          @fechar="modalFinalizarVenda = false"
+          @fechar="finalizarVendaModal"
+          @editVenda="editVenda"
+          @deletarVenda="deletarVenda"
           @sim="finalizarVenda"
-          @nao="modalFinalizarVenda = false"
+          :showModal="acoesModal"
         />
       </div>
       <div class="formaPagamento">
@@ -102,6 +106,22 @@
               <button class="button" @click="incluirPagamento">Incluir</button>
             </div>
           </v-form>
+          <div class="field desconto">
+            <label>Desconto:</label>
+            <div class="select">
+              <select v-model.trim="descontoOperacao">
+                <option>
+                  R$
+                </option>
+                <option>
+                  %
+                </option>
+              </select>
+            </div>
+            <input type="text" class="input" v-model="produto.desconto" placeholder="R$ 0,00">
+            <button class="button" @click="incluirDesconto"><v-icon>mdi-plus-thick</v-icon></button>
+          </div>
+          <v-divider></v-divider>
           <div class="demonstrativo">
             <!-- <v-data-table
               :headers="headersPagamento"
@@ -144,22 +164,6 @@
               </tbody>
             </v-simple-table>
             <div>
-              <div class="field desconto">
-                <label>Desconto:</label>
-                <div class="select">
-                  <select v-model.trim="descontoOperacao">
-                    <option>
-                      R$
-                    </option>
-                    <option>
-                      %
-                    </option>
-                  </select>
-                </div>
-                <input type="text" class="input" v-model="produto.desconto" placeholder="R$ 0,00">
-                <button class="button" @click="incluirDesconto"><v-icon>mdi-plus-thick</v-icon></button>
-              </div>
-              <v-divider></v-divider>
               <div class="valores">
                 <div class="vizualizarValores">
                   <span>Valor pago</span>
@@ -203,10 +207,12 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import ModalConfirma from '@/components/ModalConfirma.vue'
+import Tabela from '@/components/Tabela.vue'
 export default {
   name: 'theVendasDireta',
   components: {
-    ModalConfirma
+    ModalConfirma,
+    Tabela
   },
   data () {
     return {
@@ -216,14 +222,13 @@ export default {
           value: 'codigo'
         },
         {
-          text: 'Item',
+          text: 'Produtos',
           align: 'start',
           sortable: false,
           value: 'item'
         },
         { text: 'QTD', value: 'quantidade' },
         { text: 'Valor Unit', value: 'valor_unit' },
-        { text: 'Desconto', value: 'desconto' },
         { text: 'Valor Total', value: 'total' }
       ],
       headersPagamento: [
@@ -265,6 +270,7 @@ export default {
         formaPagamento: '',
         valor: null
       },
+      acoesModal: {},
       tablePagamento: [],
       venda: {
         numeroVenda: null,
@@ -395,8 +401,54 @@ export default {
       console.log(venda)
       this.modalFinalizarVenda = false
     },
+    finalizarVendaModal () {
+      this.modalFinalizarVenda = false
+      this.acoesModal.editar = false
+      this.acoesModal.deletar = false
+
+      this.acoesModal = {}
+    },
     prevenirEvento (e) {
       e.preventDefault()
+    },
+    abrirModal (event) {
+      this.modalFinalizarVenda = true
+      console.log(event)
+      this.acoesModal = event
+    },
+    editVenda (event) {
+      this.modalFinalizarVenda = true
+      console.log(event, event.nomeProduto)
+      this.items.forEach(item => {
+        if (event.nomeProduto === item.item) {
+          item.quantidade = event.quantidade
+          item.total = item.quantidade * item.valor_unit
+        }
+      })
+      const valorTotal = this.items.reduce((acumulador, item) => {
+        return acumulador + item.total
+      }, 0)
+
+      this.rodape.subTotal = valorTotal
+      this.rodape.valorTotal = valorTotal - this.rodape.desconto
+      console.log(valorTotal)
+
+      this.finalizarVendaModal()
+    },
+    deletarVenda (event) {
+      this.modalFinalizarVenda = true
+      console.log(event)
+      const newItem = this.items.filter(item => item.item !== event.nomeProduto)
+      this.items = newItem
+      const valorTotal = this.items.reduce((acumulador, item) => {
+        return acumulador + item.total
+      }, 0)
+
+      this.rodape.subTotal = valorTotal
+      this.rodape.valorTotal = valorTotal - this.rodape.desconto
+      console.log(valorTotal)
+
+      this.finalizarVendaModal()
     }
   }
 }
@@ -410,7 +462,7 @@ export default {
     width: 99%;
     position: relative;
     display: grid;
-    grid-template-columns: 1fr 650px;
+    grid-template-columns: 1fr 550px;
   }
   .modalVendas{
     position: absolute;
@@ -465,11 +517,44 @@ export default {
     overflow-y: scroll;
     border: 1px solid;
   }
+
+  .table {
+    width: 100%;
+  }
+
+  .editarTable {
+    /* position: absolute;
+    top: 320px;
+    right: 640px; */
+    width: 120px;
+    box-shadow: 0px 0px 2px 1px #000;
+    z-index: 500;
+  }
+  /* .editarTable ul {
+    display: flex;
+    width: 100%;
+    width: 120px;
+    flex-wrap: wrap;
+    justify-items: center;
+    gap: 10px;
+  }
+  .editarTable ul li {
+    display: flex;
+    width: 120px !important;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .editarTable ul li:hover{
+    background: #d5d5d5;
+  } */
   .informacoes {
     margin: 50px auto;
   }
   .informacoes ul{
     display: flex;
+    border: 1px solid;
     width: 100%;
     margin: 0 auto;
     align-items: center;
@@ -480,17 +565,19 @@ export default {
    .name {
     border: 1px solid;
   }
-  .informacoes ul li {
+  .rodape-item {
     /* border: 1px solid; */
     text-align: center;
     width: 25%;
   }
 
   .total {
+    text-align: center;
     font-size: 1.6rem;
     background: #228B22;
     color: #ffffff;
     font-weight: 500;
+    width: 35%;
   }
 
   .formaPagamento{
@@ -516,14 +603,14 @@ export default {
   }
   .comandos{
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     justify-content: center;
     align-items: start;
   }
 
   .comandos button {
-    width: 160px;
-    font-size: 1rem;
+    width: 25%;
+    font-size: .890rem;
     font-weight: 500;
     background: #228B22;
     color: #ffffff;

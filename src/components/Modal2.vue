@@ -1,71 +1,71 @@
 <template>
-  <div class="modal">
-  <div class="modal-background" @click="fecharModal"></div>
-  <div class="modal-content">
-    <form class="box card" @submit="form">
-      <div class="content is-normal header">
-        <h1>Cadastrar</h1>
-      </div>
-      <slot></slot>
-      <v-card-text v-show="acoesModal.visualizar">
-        <div class="field">
-          <label class="label">Name</label>
-          <div class="control">
-            <input class="input" type="text" :value="acoesModal.name" placeholder="Nome" disabled>
-          </div>
+  <div :class="`modal ${showModal}`">
+    <div class="modal-background" @click="fecharModal"></div>
+    <div class="modal-content">
+      <form class="box card" @submit="form">
+        <div class="content is-normal header">
+          <h1>Cadastrar</h1>
         </div>
 
-        <div class="field">
-          <label class="label">Email</label>
-          <div class="control">
-            <input class="input" type="email" :value="acoesModal.email" placeholder="usuario@gmail.com"  disabled>
+        <v-card-text v-show="acoesModal.visualizar | acoesModal.editar | acoesModal.deletar">
+          <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+              <input class="input" type="text" :value="acoesModal.name" placeholder="Nome" disabled>
+            </div>
           </div>
-        </div>
-        <div class="field">
-          <label class="label">CPF/CNPJ</label>
-          <div class="control">
-            <input class="input" type="text" :value="acoesModal.cpf_cnpj" placeholder="00.000.000/0001-00"  disabled>
+
+          <div class="field">
+            <label class="label">Email</label>
+            <div class="control">
+              <input class="input" type="email" :value="acoesModal.email" placeholder="usuario@gmail.com"  disabled>
+            </div>
           </div>
-        </div>
-        <div class="field">
-          <label class="label">Perfil</label>
-          <div class="control">
-            <input class="input" type="text" :value="acoesModal.perfil" disabled>
+          <div class="field">
+            <label class="label">CPF/CNPJ</label>
+            <div class="control">
+              <input class="input" type="text" :value="acoesModal.cpf_cnpj" placeholder="00.000.000/0001-00"  disabled>
+            </div>
           </div>
-        </div>
-        <!-- <v-text-field label="Senha"></v-text-field> -->
-      </v-card-text>
-      <v-card-actions
-        v-if="acoesModal.editar"
-      >
-        <v-spacer></v-spacer>
-        <button
-          class="button is-normal is-danger"
-          @click="fecharModal"
+          <div class="field">
+            <label class="label">Perfil</label>
+            <div class="control">
+              <input class="input" type="text" :value="acoesModal.perfil" disabled>
+            </div>
+          </div>
+          <!-- <v-text-field label="Senha"></v-text-field> -->
+        </v-card-text>
+        <v-card-actions
+          v-if="acoesModal.editar"
         >
-          Cancelar
-        </button>
-        <button
-          class="button is-normal is-success ml-2"
-          @click="salvar"
+          <v-spacer></v-spacer>
+          <button
+            class="button is-normal is-danger"
+            @click="fecharModal"
+          >
+            Cancelar
+          </button>
+          <button
+            class="button is-normal is-success ml-2"
+            @click="salvar"
+          >
+            Salvar
+          </button>
+        </v-card-actions>
+        <v-card-actions
+          v-if="acoesModal.deletar"
         >
-          Salvar
-        </button>
-      </v-card-actions>
-      <v-card-actions
-        v-if="acoesModal.deletar"
-      >
-        <button
-          class="button is-normal is-danger ml-2"
-          @click="excluir"
-        >
-          Excluir
-        </button>
-      </v-card-actions>
-    </form>
+          <button
+            class="button is-normal is-danger ml-2"
+            @click="excluir"
+          >
+            Excluir
+          </button>
+        </v-card-actions>
+      </form>
+    </div>
+    <button class="modal-close is-large" aria-label="close" @click="fecharModal"></button>
   </div>
-  <button class="modal-close is-large" aria-label="close" @click="fecharModal"></button>
-</div>
 </template>
 
 <script>
