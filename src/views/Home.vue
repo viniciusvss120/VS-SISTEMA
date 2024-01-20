@@ -1,7 +1,8 @@
 <template>
-  <div>
+  <div v-show="showHome" class="homeContainer">
     <Menu2
       :sigla="sigla"
+      class="menu2"
     />
     <section class="navigation">
       <MenuVertical
@@ -14,6 +15,7 @@
 <script>
 import MenuVertical from '@/components/MenuVertical.vue'
 import Menu2 from '@/components/Menu2'
+import axios from 'axios'
 export default {
   name: 'theInicial',
   components: {
@@ -22,7 +24,18 @@ export default {
   },
   data () {
     return {
+      showHome: false,
       showMenu: true
+    }
+  },
+  async beforeCreate () {
+    try {
+      const result = await axios.post('http://localhost:3002/validarToken', { token: window.localStorage.getItem('token') })
+      const validateUser = result.data
+      this.showHome = validateUser
+      console.log(result.data)
+    } catch (error) {
+      console.error(error)
     }
   },
   computed: {
@@ -39,7 +52,13 @@ export default {
 </script>
 
 <style scoped>
-
+  .homeContainer{
+    position: relative;
+  }
+  .menu2 {
+    position: absolute;
+    z-index: 80;
+  }
   .navigation img {
     max-width: 55%;
     justify-self: center;

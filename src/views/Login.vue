@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
       <Loading
         v-show="loading"
       />
@@ -88,8 +88,10 @@ export default {
       axios.post('http://localhost:3002/login', userLogin)
         .then(response => {
           window.localStorage.setItem('nameUser', response.data.nameUser)
+          window.localStorage.setItem('token', response.data.token)
           window.localStorage.setItem('logado', response.data.logado)
           this.$router.push('/')
+          window.location.reload()
           // window.history.pushState({}, null, '/')
         })
         .catch(error => {

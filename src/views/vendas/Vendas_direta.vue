@@ -295,28 +295,34 @@ export default {
 
     async buscarProduto () {
       try {
-        const result = await this.listar(this.filtro)
-        if (result) {
-          const itemsProd = {
-            codigo: result.codigo,
-            item: result.descricao,
-            quantidade: this.produto.quantidade,
-            valor_unit: result.preco_venda,
-            desconto: this.produto.desconto,
-            total: result.preco_venda * this.produto.quantidade
+        const filtro = this.filtro.codigo === null && this.filtro.item === '' ? null : this.filtro
+
+        console.log(filtro)
+        if (filtro !== null) {
+          const result = await this.listar(filtro)
+          console.log(result)
+          if (result) {
+            const itemsProd = {
+              codigo: result.codigo,
+              item: result.descricao,
+              quantidade: this.produto.quantidade,
+              valor_unit: result.preco_venda,
+              desconto: this.produto.desconto,
+              total: result.preco_venda * this.produto.quantidade
+            }
+
+            this.items.push(itemsProd)
+            this.filtro.codigo = null
+            this.filtro.item = ''
+            this.produto.quantidade = null
+            this.produto.valor_unit = 0
+            this.produto.total = 0
+
+            this.rodape.qtdItens = this.items.length
+            this.rodape.desconto = itemsProd.desconto
+            this.rodape.subTotal += itemsProd.total
+            this.rodape.valorTotal = this.rodape.subTotal - this.rodape.desconto
           }
-
-          this.items.push(itemsProd)
-          this.filtro.codigo = null
-          this.filtro.item = ''
-          this.produto.quantidade = null
-          this.produto.valor_unit = 0
-          this.produto.total = 0
-
-          this.rodape.qtdItens = this.items.length
-          this.rodape.desconto = itemsProd.desconto
-          this.rodape.subTotal += itemsProd.total
-          this.rodape.valorTotal = this.rodape.subTotal - this.rodape.desconto
         }
       } catch (error) {
         console.error(error)

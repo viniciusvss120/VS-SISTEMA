@@ -111,7 +111,6 @@ export default {
   },
   created () {
     this.pathname = window.location.pathname
-    console.log(this.dados)
   },
   methods: {
     vizualizar (id) {

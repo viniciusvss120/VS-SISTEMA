@@ -6,6 +6,8 @@ import RecuperarSenha from '../views/RecuperarSenha.vue'
 import ControleUsers from '../views/cadastro/Controle_Users.vue'
 import CriarUsuario from '../views/cadastro/Criar_Usuario'
 
+// import Error from '../views/Error'
+
 import Vendas from '../views/vendas/Vendas.vue'
 import VendasDireta from '../views/vendas/Vendas_direta.vue'
 
@@ -68,11 +70,25 @@ const routes = [
     component: RecuperarSenha
   }
 ]
-
+const rotaLogin = [
+  {
+    path: '/login',
+    name: 'theLogin',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: Login
+  },
+  {
+    path: '/recuperarsenha',
+    name: 'theRecuperarSenha',
+    component: RecuperarSenha
+  }
+]
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes: !window.localStorage.getItem('token') ? rotaLogin : routes
 })
 
 export default router

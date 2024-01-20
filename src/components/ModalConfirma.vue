@@ -17,10 +17,6 @@
       <div class="msg">
         <p>Deseja excluir este item ?</p>
       </div>
-      <div class="qtd">
-        <label>Quantidade</label>
-        <input class="input" type="text" placeholder="0" v-model.trim="quantidade">
-      </div>
       <v-divider></v-divider>
       <div class="btnModal">
         <button class="button sim" @click="deletarVenda">Sim</button>
@@ -35,7 +31,7 @@
       </div>
       <div class="qtd">
         <label>Quantidade</label>
-        <input class="input" type="text" placeholder="0" v-model.trim="quantidade">
+        <input class="input" type="number" placeholder="0" v-model.trim="quantidade">
       </div>
       <v-divider></v-divider>
       <div class="btnModal">

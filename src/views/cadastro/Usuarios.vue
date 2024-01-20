@@ -103,7 +103,6 @@ export default {
       const userName = window.localStorage.getItem('nameUser')
       const regexName = /[A-Z]/g
       const siglaUser = regexName.exec(userName) + regexName.exec(userName)
-      console.log(siglaUser)
       // .slice(0, 2).toLocaleUpperCase()
       return siglaUser
     }

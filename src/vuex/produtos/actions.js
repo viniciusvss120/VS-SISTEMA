@@ -14,6 +14,7 @@ export default {
   async listar ({ commit }, data) {
     try {
       const result = await axios.post('http://localhost:3002/listprod/', data)
+      console.log(data)
       if (data !== null || data !== '') {
         commit('listProd', result.data)
       }

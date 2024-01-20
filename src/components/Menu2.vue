@@ -74,8 +74,8 @@ export default {
 
   .cardLogin{
     position: absolute;
-    right: 10px;
+    right: 12px;
     top: 70px;
-    z-index: 5;
+    z-index: -41;
   }
 </style>
