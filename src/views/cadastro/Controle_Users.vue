@@ -188,7 +188,8 @@ export default {
   computed: {
     ...mapState('users', ['users']),
     showUsers () {
-      return this.selectUser.length === 0 ? this.items : this.selectUser
+      const user = this.items
+      return this.selectUser.length === 0 ? user : this.selectUser
     },
     names () {
       const name = this.itensTotal.map(item => item.name)
@@ -215,6 +216,7 @@ export default {
         const list = await this.listar()
         this.paginacao(list)
         this.itensTotal = list
+        this.itensTotal.reverse()
         this.perfis = list.map(item => item.perfil)
         this.loading = false
       } catch (error) {

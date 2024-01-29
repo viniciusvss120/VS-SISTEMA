@@ -57,7 +57,8 @@ export default {
     }
   },
   created () {
-    console.log(this.showModal)
+    console.log(this.showModal, this.showModal.quantidade)
+    this.quantidade = this.showModal.quantidade
   },
   computed: {
     showFinalizarVenda () {

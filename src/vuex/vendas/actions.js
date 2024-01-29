@@ -1,10 +1,10 @@
 import axios from 'axios'
 
 export default {
-  async cadastrar ({ commit }, data) {
+  async vendaFinalizar ({ commit }, data) {
     try {
-      const result = await axios.post('http://localhost:3002/createprod', data)
-
+      const result = await axios.post('http://localhost:3002/vendas', data)
+      console.log(result)
       return result
     } catch (error) {
       return error

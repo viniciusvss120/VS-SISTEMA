@@ -123,13 +123,6 @@
           </div>
           <v-divider></v-divider>
           <div class="demonstrativo">
-            <!-- <v-data-table
-              :headers="headersPagamento"
-              :items="tablePagamento"
-              class="tabelaPagamento"
-              disable-sort
-              hide-default-footer
-            /> -->
             <v-simple-table class="tabelaPagamento">
               <thead>
                 <tr>
@@ -292,37 +285,40 @@ export default {
   },
   methods: {
     ...mapActions('produtos', ['listar']),
+    ...mapActions('vendas', ['vendaFinalizar']),
 
     async buscarProduto () {
       try {
-        const filtro = this.filtro.codigo === null && this.filtro.item === '' ? null : this.filtro
+        if (this.filtro.codigo !== null || this.filtro.item !== '') {
+          if (this.produto.quantidade !== null) {
+            const result = await this.listar(this.filtro)
+            if (result) {
+              const itemsProd = {
+                codigo: result.codigo,
+                item: result.descricao,
+                quantidade: this.produto.quantidade,
+                valor_unit: result.preco_venda,
+                desconto: this.produto.desconto,
+                total: result.preco_venda * this.produto.quantidade
+              }
 
-        console.log(filtro)
-        if (filtro !== null) {
-          const result = await this.listar(filtro)
-          console.log(result)
-          if (result) {
-            const itemsProd = {
-              codigo: result.codigo,
-              item: result.descricao,
-              quantidade: this.produto.quantidade,
-              valor_unit: result.preco_venda,
-              desconto: this.produto.desconto,
-              total: result.preco_venda * this.produto.quantidade
+              this.items.push(itemsProd)
+              this.filtro.codigo = null
+              this.filtro.item = ''
+              this.produto.quantidade = null
+              this.produto.valor_unit = 0
+              this.produto.total = 0
+
+              this.rodape.qtdItens = this.items.length
+              this.rodape.desconto = itemsProd.desconto
+              this.rodape.subTotal += itemsProd.total
+              this.rodape.valorTotal = this.rodape.subTotal - this.rodape.desconto
             }
-
-            this.items.push(itemsProd)
-            this.filtro.codigo = null
-            this.filtro.item = ''
-            this.produto.quantidade = null
-            this.produto.valor_unit = 0
-            this.produto.total = 0
-
-            this.rodape.qtdItens = this.items.length
-            this.rodape.desconto = itemsProd.desconto
-            this.rodape.subTotal += itemsProd.total
-            this.rodape.valorTotal = this.rodape.subTotal - this.rodape.desconto
+          } else {
+            window.alert('Informe a quantidade')
           }
+        } else {
+          window.alert('Informe o código do produto ou a descrição')
         }
       } catch (error) {
         console.error(error)
@@ -334,13 +330,15 @@ export default {
     },
     async completarFiltro () {
       try {
-        const result = await this.listar(this.filtro)
-
-        if (this.filtro.codigo === null) {
+        if (this.filtro.codigo !== null || this.filtro.item !== '') {
+          const result = await this.listar(this.filtro)
+          console.log(result, this.filtro)
           this.filtro.codigo = result.codigo
+          this.produto.valor_unit = result.preco_venda
+          this.produto.total = result.preco_venda * this.produto.quantidade
+        } else {
+          window.alert('Informe o código do produto ou a descrição')
         }
-        this.produto.valor_unit = result.preco_venda
-        this.produto.total = result.preco_venda * this.produto.quantidade
       } catch (error) {
         console.error(error)
       }
@@ -350,18 +348,22 @@ export default {
       console.log('ativo')
     },
     incluirPagamento () {
-      const itemPagamento = {}
+      if (this.pagamento.formaPagamento !== '' && this.pagamento.valor !== null) {
+        const itemPagamento = {}
 
-      Object.assign(itemPagamento, this.pagamento)
-      this.tablePagamento.push(itemPagamento)
+        Object.assign(itemPagamento, this.pagamento)
+        this.tablePagamento.push(itemPagamento)
 
-      const valorTabelaPagamento = this.tablePagamento.reduce((acumulador, valorAtual) => acumulador + Number(valorAtual.valor), 0)
+        const valorTabelaPagamento = this.tablePagamento.reduce((acumulador, valorAtual) => acumulador + Number(valorAtual.valor), 0)
 
-      this.rodape.valorPago = valorTabelaPagamento
-      this.pagamento.valor = null
-      this.pagamento.formaPagamento = ''
+        this.rodape.valorPago = valorTabelaPagamento
+        this.pagamento.valor = null
+        this.pagamento.formaPagamento = ''
 
-      this.rodape.troco = this.rodape.valorPago - this.rodape.valorTotal
+        this.rodape.troco = this.rodape.valorPago - this.rodape.valorTotal
+      } else {
+        window.alert('Informe a forma de pagamento e o valor!')
+      }
     },
     incluirDesconto () {
       const descontoPercentual = this.produto.desconto / 100 * this.rodape.valorTotal
@@ -379,33 +381,54 @@ export default {
       this.rodape.troco = this.rodape.valorPago - this.rodape.valorTotal
       console.log(newTablePagamento)
     },
-    finalizarVenda () {
-      const valorDebito = this.tablePagamento.reduce((acumulador, item) => {
-        const debito = item.formaPagamento === 'Cartão Débito' ? acumulador + Number(item.valor) : acumulador
-        return debito
-      }, 0)
-      const valorCredito = this.tablePagamento.reduce((acumulador, item) => {
-        const debito = item.formaPagamento === 'Cartão Crédito' ? acumulador + Number(item.valor) : acumulador
-        return debito
-      }, 0)
-      const valorDinheiro = this.tablePagamento.reduce((acumulador, item) => {
-        const debito = item.formaPagamento === 'Dinheiro' ? acumulador + Number(item.valor) : acumulador
-        return debito
-      }, 0)
+    async finalizarVenda () {
+      try {
+        if (this.items.length !== 0 && this.tablePagamento.length !== 0) {
+          const valorDebito = this.tablePagamento.reduce((acumulador, item) => {
+            const debito = item.formaPagamento === 'Cartão Débito' ? acumulador + Number(item.valor) : acumulador
+            return debito
+          }, 0)
+          const valorCredito = this.tablePagamento.reduce((acumulador, item) => {
+            const debito = item.formaPagamento === 'Cartão Crédito' ? acumulador + Number(item.valor) : acumulador
+            return debito
+          }, 0)
+          const valorDinheiro = this.tablePagamento.reduce((acumulador, item) => {
+            const debito = item.formaPagamento === 'Dinheiro' ? acumulador + Number(item.valor) : acumulador
+            return debito
+          }, 0)
+          if (this.rodape.valorPago >= this.rodape.valorTotal) {
+            const venda = {
+              cod_venda: Date.now(),
+              items: this.items,
+              cartao_debito: valorDebito,
+              cartao_credito: valorCredito,
+              dinheiro: valorDinheiro,
+              desconto: this.rodape.desconto,
+              valor_total: this.rodape.valorTotal,
+              troco: this.rodape.troco
+            }
 
-      const venda = {
-        numeroVenda: null,
-        items: this.items,
-        cartao_debito: valorDebito,
-        cartao_credito: valorCredito,
-        dinheiro: valorDinheiro,
-        desconto: this.rodape.desconto,
-        valorTotal: this.rodape.valorTotal,
-        troco: this.rodape.troco
+            await this.vendaFinalizar(venda)
+            this.items = []
+            this.pagamento.formaPagamento = ''
+            this.pagamento.valor = null
+            this.tablePagamento = []
+
+            this.rodape.qtdItens = null
+            this.rodape.subTotal = null
+            this.rodape.valorTotal = null
+            this.rodape.valorPago = 0
+            this.rodape.troco = this.rodape.valorPago - this.rodape.valorTotal
+            this.modalFinalizarVenda = false
+          } else {
+            const dividaCliente = this.rodape.valorTotal - this.rodape.valorPago
+            window.alert(`Não foi possível fechar a venda, o cliente deve R$ ${dividaCliente}`)
+            this.modalFinalizarVenda = false
+          }
+        }
+      } catch (error) {
+        console.error(error)
       }
-
-      console.log(venda)
-      this.modalFinalizarVenda = false
     },
     finalizarVendaModal () {
       this.modalFinalizarVenda = false
@@ -450,6 +473,7 @@ export default {
         return acumulador + item.total
       }, 0)
 
+      this.rodape.qtdItens = newItem.length
       this.rodape.subTotal = valorTotal
       this.rodape.valorTotal = valorTotal - this.rodape.desconto
       console.log(valorTotal)
@@ -489,7 +513,7 @@ export default {
   }
   .descricao{
     display: grid;
-    border: 1px solid;
+    /* border: 1px solid; */
     text-align: center;
   }
 
@@ -536,31 +560,12 @@ export default {
     box-shadow: 0px 0px 2px 1px #000;
     z-index: 500;
   }
-  /* .editarTable ul {
-    display: flex;
-    width: 100%;
-    width: 120px;
-    flex-wrap: wrap;
-    justify-items: center;
-    gap: 10px;
-  }
-  .editarTable ul li {
-    display: flex;
-    width: 120px !important;
-    gap: 6px;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  .editarTable ul li:hover{
-    background: #d5d5d5;
-  } */
   .informacoes {
     margin: 50px auto;
   }
   .informacoes ul{
     display: flex;
-    border: 1px solid;
+    /* border: 1px solid; */
     width: 100%;
     margin: 0 auto;
     align-items: center;

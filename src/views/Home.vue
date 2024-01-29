@@ -56,7 +56,7 @@ export default {
     position: relative;
   }
   .menu2 {
-    position: absolute;
+    /* position: absolute; */
     z-index: 80;
   }
   .navigation img {
